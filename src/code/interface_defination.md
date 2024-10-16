@@ -27,8 +27,16 @@ auto t =  binomial_heap.find_min();
 binomial_heap.delete_min();
 ```
 
+<<<<<<< HEAD
 5. merge two heap, h2 will be merged to h1
 
 ```C++
 merge(h1, h2)
 ```
+=======
+5. merge two heap
+
+```C++
+auto new_binomial_heap = merge_binomial_heap(binomial_heap_1, binomial_heap_2);
+```
+>>>>>>> 39056e3fc99c26c5c68323c62f8917a4216cf109
