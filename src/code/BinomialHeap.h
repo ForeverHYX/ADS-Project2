@@ -1,136 +1,258 @@
 #include<list>
-#include<iostream>
-
 // defination
 
+template <class T>
+struct BinomialNode;
+
+template <class T>
 struct BinomialHeap;
-struct BinomialTree;
 
+template <class T>
+struct BinomialNode{
+    T key;
+    int degree;
+    BinomialNode<T>* child;
+    BinomialNode<T>* parent;
+    BinomialNode<T>* next;
+
+    BinomialNode(T key):key(key), degree(0), child(nullptr), parent(nullptr), next(nullptr){};
+};
+
+template <class T>
 struct BinomialHeap{
-    std::list<BinomialTree*> root_list;
+    BinomialNode<T>* root_node;
 
-    BinomialHeap() = default;
-    void insert(int key);
-    BinomialTree* find_min();
+    void insert(T key);
+    int find_min();
     void delete_min();
-    std::list<BinomialTree*>::iterator locate_by_degree(size_t tar_degree);
-    size_t get_degree();
-    void add_tree(BinomialTree* new_tree);
+    void merge(BinomialHeap* other);
+
+    BinomialNode<T>* merge_root(BinomialNode<T>* p, BinomialNode<T>* q);
+    void link(BinomialNode<T>* root, BinomialNode<T>* child);
+    BinomialNode<T>* merge(BinomialNode<T>* p, BinomialNode<T>* q);
+    void find_min_key(BinomialNode<T>* &min_key, BinomialNode<T>* &pre_min_key);
+    BinomialNode<T>* reverse(BinomialNode<T>* root);
+    BinomialNode<T>* is_exist(BinomialNode<T>* root, T key);
+    bool is_exist(T key);
 };
 
-BinomialHeap* merge_binomial_heap(BinomialHeap* p, BinomialHeap* q);
+// merge root list of two heaps by degree-increasing, return new root node
+template <class T>
+BinomialNode<T>* BinomialHeap<T>::merge_root(BinomialNode<T>* p, BinomialNode<T>* q){
+    BinomialNode<T>* ret = nullptr;
+    BinomialNode<T>** pos = &ret;
 
-struct BinomialTree{
-    /* data */
-    size_t degree = 0;
-    int val;
-    std::list<BinomialTree*> child_list;
-
-    BinomialTree() = default;
-    BinomialTree(int init_key);
-    BinomialTree* add_sub_tree(BinomialTree* new_sub_tree);
-};
-
-BinomialTree* merge_binomial_tree(BinomialTree* p, BinomialTree* q);
-
-// implementation
-
-void BinomialHeap::insert(int key){
-    auto t = new BinomialHeap;
-    auto p = new BinomialTree(key);
-    t->root_list.push_back(p);
-
-    auto q = merge_binomial_heap(this, t);
-    this->root_list = std::move(q->root_list);
-}
-
-BinomialTree* BinomialHeap::find_min(){
-    BinomialTree* ret = nullptr;
-    int min_key = 0x7fffffff;
-    for(auto i:root_list){
-        if(i->val < min_key){
-            min_key = i->val;
-            ret = i;
+    while(p && q){
+        if(p->degree < q->degree){
+            *pos = p;
+            p = p->next;
         }
+        else{
+            *pos = q;
+            q = q->next;
+        }
+
+        pos = &((*pos)->next);
     }
+
+    if(p){
+        *pos = p;
+    }
+
+    if(q){
+        *pos = q;
+    }
+
     return ret;
 }
 
-std::list<BinomialTree*>::iterator BinomialHeap::locate_by_degree(size_t tar_degree){
-    auto ret = this->root_list.begin();
-    while(ret != root_list.end()){
-        if(tar_degree == (*ret)->degree){
-            break;
-        }
-        ret++;
-    }
-    return ret;
+// link child node to root node as child
+template <class T>
+void BinomialHeap<T>::link(BinomialNode<T>* root, BinomialNode<T>* child){
+    child->parent = root;
+    child->next = root->child;
+    root->child = child;
+    root->degree += 1;
 }
 
-size_t BinomialHeap::get_degree(){
-    size_t degree = 0;
-    for(auto i:this->root_list){
-        if(i->degree >= degree){
-            degree = i->degree;
-        }
+// merge two heap, return merged heap
+template <class T>
+BinomialNode<T>* BinomialHeap<T>::merge(BinomialNode<T>* p, BinomialNode<T>* q){
+    auto root = merge_root(p, q);
+    if(root == nullptr){
+        return root;
     }
-    return degree;
+
+    BinomialNode<T>* pre = nullptr;
+    BinomialNode<T>* cur = root;
+    BinomialNode<T>* nxt = cur->next;
+    
+    while(nxt != nullptr){
+        if((cur->degree != nxt->degree) || ((nxt->next != nullptr) && (nxt->next->degree == nxt->degree))){
+            pre = cur;
+            cur = nxt;
+        }
+        else if(cur->key <= nxt->key){
+            cur->next = nxt->next;
+            link(cur, nxt);
+        }
+        else{
+            if(pre == nullptr){
+                root = nxt;
+            }
+            else{
+                pre->next = nxt;
+            }
+
+            link(nxt, cur);
+            cur = nxt;
+        }
+
+        nxt = cur->next;
+    }
+
+    return root;
 }
 
-
-void BinomialHeap::add_tree(BinomialTree* new_tree){
-    auto u = this->locate_by_degree(new_tree->degree);
-    if(u == this->root_list.end()){
-        this->root_list.push_back(new_tree);
+// merge other heap to this heap
+template <class T>
+void BinomialHeap<T>::merge(BinomialHeap<T>* other){
+    if(other != nullptr && other->root_node != nullptr){
+        this->root_node = merge(this->root_node, other->root_node);
     }
-    else{
-        auto t = merge_binomial_tree(*u, new_tree);
-        this->root_list.erase(u);
-        this->add_tree(t);
+}
+
+// insert a node with key into this heap
+template <class T>
+void BinomialHeap<T>::insert(T key){
+    auto new_node = new BinomialNode<T>(key);
+    if(new_node != nullptr){
+        this->root_node = merge(this->root_node, new_node);
     }
     return;
 }
 
-BinomialHeap* merge_binomial_heap(BinomialHeap* p, BinomialHeap* q){
-    auto ret_heap = new BinomialHeap;
-    auto max_degree = std::max(p->get_degree(), q->get_degree());
-    for(size_t i = 0; i <= max_degree; ++i){
-        auto r = p->locate_by_degree(i);
-        auto s = q->locate_by_degree(i);
-        if(r == p->root_list.end() && s == q->root_list.end()){
-            ;
-        }
-        else if(r != p->root_list.end() && s == q->root_list.end()){
-            ret_heap->add_tree(*r);
-        }
-        else if(r == p->root_list.end() && s != q->root_list.end()){
-            ret_heap->add_tree(*s);
-        }
-        else{
-            auto u = merge_binomial_tree(*r, *s);
-            ret_heap->add_tree(u);
-        }
+// store the pointers to minimum key and its pre to given pointers
+template <class T>
+void BinomialHeap<T>::find_min_key(BinomialNode<T>* &min_key, BinomialNode<T>* &pre_min_key){
+    BinomialNode<T>* cur;
+    BinomialNode<T>* pre;
+
+    min_key = pre_min_key = nullptr;
+
+    if(this->root_node == nullptr){
+        return;
     }
 
-    return ret_heap;
+    cur = this->root_node->next;
+    pre = this->root_node;
+
+    min_key = root_node;
+    pre_min_key = nullptr;
+
+    while(cur != nullptr){
+        if(cur->key <= min_key->key){
+            min_key = cur;
+            pre_min_key = pre;
+        }
+        pre = cur;
+        cur = cur->next;
+    }
+    return;
 }
 
-BinomialTree::BinomialTree(int init_key){
-    degree = 0;
-    val = init_key;
-}
+// return the minimum key value of this heap
+template <class T>
+int BinomialHeap<T>::find_min(){
+    BinomialNode<T>* min_key;
+    BinomialNode<T>* pre_min_key;
+    find_min_key(this->root_node, min_key, pre_min_key);
 
-BinomialTree* BinomialTree::add_sub_tree(BinomialTree* new_sub_tree){
-    this->degree += 1;
-    this->child_list.push_back(new_sub_tree);
-    return this;
-}
-
-BinomialTree* merge_binomial_tree(BinomialTree* p, BinomialTree* q){
-    if(p->val <= q->val){
-        return p->add_sub_tree(q);
+    if(min_key == nullptr){
+        return -1;
     }
     else{
-        return q->add_sub_tree(p);
+        return min_key->key;
+    }
+}
+
+// reserve the heap
+template <class T>
+BinomialNode<T>* BinomialHeap<T>::reverse(BinomialNode<T>* root){
+    BinomialNode<T>* next;
+    BinomialNode<T>* tail = NULL;
+
+    if(!root){
+        return root;
+    }
+
+    root->parent = nullptr;
+    while(root->next){
+        next = root->next;
+        root->next = tail;
+        tail = root;
+        root = next;
+        root->parent = nullptr;
+    }
+
+    root->next = tail;
+    return root;
+}
+
+// delete the min key node
+template <class T>
+void BinomialHeap<T>::delete_min(){
+    auto root = this->root_node;
+    BinomialNode<T>* min_key;
+    BinomialNode<T>* pre_min_key;
+    find_min_key(this->root_node, min_key, pre_min_key);
+
+    if(pre_min_key == nullptr){
+        root = root->next;
+    }
+    else{
+        pre_min_key->next = min_key->next;
+    }
+    
+    auto child = reverse(min_key->child);
+    root = merge(child, root);
+    delete min_key;
+
+    this->root_node = root;
+
+}
+
+// check if key is existing in the heap
+template <class T>
+BinomialNode<T>* BinomialHeap<T>::is_exist(BinomialNode<T>* root, T key){
+    BinomialNode<T>* child;
+    BinomialNode<T>* parent;
+
+    parent = root;
+    while (parent != nullptr){
+        if(parent->key == key){
+            return parent;
+        }
+        else{
+            child = is_exist(parent->child, key);
+            if(child != nullptr){
+                return child;
+            }
+            parent = parent->next;
+        }
+    }
+
+    return nullptr;
+    
+}
+
+template <class T>
+bool BinomialHeap<T>::is_exist(T key){
+    auto t = is_exist(this->root_node, key);
+    if(t != nullptr){
+        return true;
+    }
+    else{
+        return false;
     }
 }
