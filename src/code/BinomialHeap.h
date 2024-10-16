@@ -1,6 +1,3 @@
-#include<list>
-// defination
-
 template <class T>
 struct BinomialNode;
 
