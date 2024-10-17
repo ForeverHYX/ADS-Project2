@@ -1,7 +1,0 @@
----
-triple:          'arm64-apple-darwin'
-binary-path:     '/Users/vanadium/Documents/study/ads/project/ADS-Project2/src/code/output/temp'
-relocations:
-  - { offset: 0x26, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x0, symBinAddr: 0x100003F78, symSize: 0x24 }
-  - { offset: 0x33, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x0, symBinAddr: 0x100003F78, symSize: 0x24 }
-...
