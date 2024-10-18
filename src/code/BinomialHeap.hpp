@@ -1,6 +1,3 @@
-#include<list>
-// defination
-
 template <class T>
 struct BinomialNode;
 
@@ -23,9 +20,10 @@ struct BinomialHeap{
     BinomialNode<T>* root_node;
 
     void insert(T key);
-    int find_min();
+    T find_min();
     void delete_min();
     void merge(BinomialHeap* other);
+    bool is_exist(T key);
 
     BinomialNode<T>* merge_root(BinomialNode<T>* p, BinomialNode<T>* q);
     void link(BinomialNode<T>* root, BinomialNode<T>* child);
@@ -33,7 +31,6 @@ struct BinomialHeap{
     void find_min_key(BinomialNode<T>* &min_key, BinomialNode<T>* &pre_min_key);
     BinomialNode<T>* reverse(BinomialNode<T>* root);
     BinomialNode<T>* is_exist(BinomialNode<T>* root, T key);
-    bool is_exist(T key);
 };
 
 // merge root list of two heaps by degree-increasing, return new root node
@@ -163,17 +160,12 @@ void BinomialHeap<T>::find_min_key(BinomialNode<T>* &min_key, BinomialNode<T>* &
 
 // return the minimum key value of this heap
 template <class T>
-int BinomialHeap<T>::find_min(){
+T BinomialHeap<T>::find_min(){
     BinomialNode<T>* min_key;
     BinomialNode<T>* pre_min_key;
-    find_min_key(this->root_node, min_key, pre_min_key);
+    find_min_key(min_key, pre_min_key);
 
-    if(min_key == nullptr){
-        return -1;
-    }
-    else{
-        return min_key->key;
-    }
+    return min_key->key;
 }
 
 // reserve the heap
@@ -205,7 +197,7 @@ void BinomialHeap<T>::delete_min(){
     auto root = this->root_node;
     BinomialNode<T>* min_key;
     BinomialNode<T>* pre_min_key;
-    find_min_key(this->root_node, min_key, pre_min_key);
+    find_min_key(min_key, pre_min_key);
 
     if(pre_min_key == nullptr){
         root = root->next;
