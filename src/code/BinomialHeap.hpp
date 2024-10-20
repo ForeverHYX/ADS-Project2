@@ -7,7 +7,7 @@ struct BinomialHeap;
 template <class T>
 struct BinomialNode{
     T key;
-    int degree;
+    long int degree;
     BinomialNode<T>* child;
     BinomialNode<T>* parent;
     BinomialNode<T>* next;

@@ -2,8 +2,8 @@
 #include <vector>
 
 struct node { // 确保比较器可以使用 node 结构体
-    int dis;
-    int pos;
+    long int dis;
+    long int pos;
 
     // 比较运算符，确保可以与 node 比较
     bool operator >(const node &other) const {
