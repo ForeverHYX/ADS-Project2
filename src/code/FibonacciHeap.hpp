@@ -10,6 +10,12 @@ struct FibonacciHeap{
 
     FibonacciHeap(): heap(nullptr) {}
 
+    ~FibonacciHeap(){
+        while(this->heap != nullptr){
+            this->delete_min();
+        }
+    }
+
     void insert(T key){
         auto n = new FibonacciNode<T>(key);
         this->heap = _merge(this->heap, n);
@@ -28,13 +34,10 @@ struct FibonacciHeap{
         // 合并子节点到根列表
         this->heap = _delete_min(this->heap);
         delete minNode;  // 删除原来的最小节点
-<<<<<<< HEAD
     }
 
     void decrease_key(FibonacciNode<T>* node, T value){
         this->heap = _decrease_key(this->heap, node, value);
-=======
->>>>>>> 3c78f700bc0f333bf1bc209c8acf19606423e7f8
     }
 
     void merge(FibonacciHeap<T>* other){
