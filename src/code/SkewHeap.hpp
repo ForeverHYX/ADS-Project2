@@ -2,43 +2,54 @@ template <class T>
 struct SkewNode;
 
 template <class T>
-struct SkewHeap{
+struct SkewHeap {
     SkewNode<T>* root;
 
-    T find_min(){
+    SkewHeap(): root(nullptr) {}
+
+    T find_min() {
+        if (this->root == nullptr) {
+            throw std::runtime_error("Heap is empty");
+        }
         return this->root->key;
     }
 
-    void delete_min(){
+    void delete_min() {
+        if (this->root == nullptr) return;
         this->root = _delete_min(this->root);
     }
 
-    void merge(SkewNode<T>* other){
-        this->root = _merge(this->root, other);
+    void merge(SkewHeap<T>* other) {
+        if (other == nullptr) return;
+        this->root = _merge(this->root, other->root);
+        other->root = nullptr;
     }
 
-    void insert(T key){
+    void insert(T key) {
         this->root = _insert(this->root, key);
     }
 
-    SkewNode<T>* _merge(SkewNode<T>* x, SkewNode<T>* y){
-        if(!x)  return y;
-        if(!y)  return x;
+private:
+    SkewNode<T>* _merge(SkewNode<T>* x, SkewNode<T>* y) {
+        if (!x) return y;
+        if (!y) return x;
 
-        if(x->key > y->key){
-            auto t = x; x = y;  y = t;
+        if (x->key > y->key) {
+            std::swap(x, y);
         }
 
         x->right_child = _merge(x->right_child, y);
+        std::swap(x->left_child, x->right_child);
+
         return x;
     }
 
-    SkewNode<T>* _insert(SkewNode<T>* n, T key){
+    SkewNode<T>* _insert(SkewNode<T>* n, T key) {
         SkewNode<T>* t = new SkewNode<T>(key);
         return _merge(n, t);
     }
 
-    SkewNode<T>* _delete_min(SkewNode<T>* n){
+    SkewNode<T>* _delete_min(SkewNode<T>* n) {
         SkewNode<T>* ret = _merge(n->left_child, n->right_child);
         delete n;
         return ret;
@@ -46,10 +57,10 @@ struct SkewHeap{
 };
 
 template <class T>
-struct SkewNode{
+struct SkewNode {
     T key;
     SkewNode<T>* left_child;
     SkewNode<T>* right_child;
 
-    SkewNode<T>(T key): key(key), left_child(nullptr), right_child(nullptr){};
+    SkewNode(T key): key(key), left_child(nullptr), right_child(nullptr) {}
 };
