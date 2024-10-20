@@ -70,3 +70,71 @@ struct FibonacciNode{
 #### 查询
 
 深搜
+
+#### 减少
+
+为了实现减少某个节点的值的操作，需要先定义一个剪切操作，即将该节点及其子节点全部剪下来，并入到原堆的根里面，在代码中实现如下
+
+```c++
+FibonacciNode<T>* _cut(FibonacciNode<T>* heap, FibonacciNode<T>* node){
+    if(node->next == node){
+        node->parent->child = nullptr;
+    }
+    else{
+        node->next->prev = node->prev;
+        node->prev->next = node->next;
+
+        node->parent->child = node->next;
+    }
+
+    node->next = node->prev = node;
+    node->marked = false;
+
+    return _merge(heap, node);
+}
+```
+
+当某个节点的值减少后，从这个节点开始向上，可能就不符合堆的性质了，需要对其进行维护，具体维护方式的代码实现如下
+
+```c++
+FibonacciNode<T>* _decrease_key(FibonacciNode<T>* nodeheap, FibonacciNode<T>* node,T value){
+    if(node->key < value){
+        return heap;
+    }
+
+    node->key = value;
+    if(node->parent != nullptr){
+        if(node->key < node->parent->key){
+            heap = _cut(heap, node);
+
+            FibonacciNode<T>* parent = node->parent;
+            node->parent = nullptr;
+
+            while(parent != nullptr && parent->marked == true){
+                heap = _cut(heap, parent);
+
+                node = parent;
+                parent = node->parent;
+                node->parent = nullptr;
+            }
+
+            if(parent != nullptr && parent->parent != nullptr){
+                parent->marked = true;
+            }
+        }
+    }
+    else{
+        if(node->key < heap->key){
+            heap = node;
+        }
+    }
+
+    return heap;
+    }
+```
+
+主要解释减少非根节点的情况：
+
+假如修改后破坏了堆的性质，即 `node->key < node->parent->key`，则剪下该节点及其子节点，并入根堆；然后向上递归地重复操作，直到遇到根节点或第一个孩子已经被删除的节点
+
+递归操作完毕后，假如停留在了根节点以下，标记这个根节点的第一个孩子被删除

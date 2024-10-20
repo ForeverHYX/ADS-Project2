@@ -26,20 +26,26 @@ inline void addEdge(int u, int v, int d) {
     head[u] = edgeCount;
 }
 
-FibonacciHeap<pair<int, int>> minHeap;
+FibonacciHeap<pair<int, int> > minHeap;
 
 inline void relax(int x, int y, int d) {
     if (distances[y] > distances[x] + d) {
         distances[y] = distances[x] + d;
         if (!visited[y]) {
-            minHeap.insert({distances[y], y});
+            pair<int, int> t = pair<int, int>();
+            t.first = distances[y];
+            t.second = y;
+            minHeap.insert(t);
         }
     }
 }
 
 inline void dijkstra() {
     distances[startNode] = 0;
-    minHeap.insert({0, startNode});
+    pair<int, int> t = pair<int, int>();
+    t.first = 0;
+    t.second = startNode;
+    minHeap.insert(t);
     
     while (minHeap.heap != nullptr) {
         auto current = minHeap.find_min(); 

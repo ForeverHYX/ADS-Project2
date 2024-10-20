@@ -32,3 +32,11 @@ binomial_heap<T>.delete_min();
 ```C++
 bool is_exist = binomial_heap<T>.is_exist(key);
 ```
+
+6. decrease key
+
+```C++
+auto t =  binomial_heap<T>.find_min();
+T* new_node = new T();
+binomial_heap<T>.decrease_key(t, new_node);
+```
