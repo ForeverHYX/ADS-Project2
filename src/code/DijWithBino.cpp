@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstdio>
 #include <limits>
-#include "Heap.hpp"
+#include "BinomialHeap.hpp"
 
 using namespace std;
 
@@ -26,26 +26,26 @@ inline void addEdge(int u, int v, int d) {
     head[u] = edgeCount;
 }
 
-Heap<node> minHeap;
+BinomialHeap<pair<int, int>> minHeap;
 
 inline void relax(int x, int y, int d) {
     if (distances[y] > distances[x] + d) {
         distances[y] = distances[x] + d;
         if (!visited[y]) {
-            minHeap.insert((node){distances[y], y});
+            minHeap.insert({distances[y], y});
         }
     }
 }
 
 inline void dijkstra() {
     distances[startNode] = 0;
-    minHeap.insert((node){0, startNode});
+    minHeap.insert({0, startNode});
     
-    while (!minHeap.heap.empty()) {
-        node currentNode = minHeap.find_min();
+    while (minHeap.root_node != nullptr) {
+        auto current = minHeap.find_min();  // Find minimum distance node
         minHeap.delete_min();
         
-        int x = currentNode.pos;
+        int x = current.second;  // current.second holds the vertex
         if (visited[x])
             continue;
 
