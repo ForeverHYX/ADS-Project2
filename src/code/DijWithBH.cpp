@@ -2,7 +2,8 @@
 #include <vector>
 #include <cstdio>
 #include <limits>
-#include "SkewHeap.hpp"
+#include <cstring>
+#include "BinaryHeap.hpp"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ struct Edge {
 Edge edges[MAX_EDGES];
 int head[MAX_NODES], distances[MAX_NODES], edgeCount;
 bool visited[MAX_NODES];
-int numNodes, numEdges;
+int numNodes, numEdges, startNode;
 
 inline void addEdge(int u, int v, int d) {
     edgeCount++;
@@ -26,7 +27,7 @@ inline void addEdge(int u, int v, int d) {
     head[u] = edgeCount;
 }
 
-SkewHeap<pair<int, int>> minHeap;
+BinaryHeap<pair<int, int>> minHeap;
 
 inline void relax(int x, int y, int d) {
     if (distances[y] > distances[x] + d) {
@@ -37,11 +38,11 @@ inline void relax(int x, int y, int d) {
     }
 }
 
-inline void dijkstra(int startNode) {
+inline void dijkstra() {
     distances[startNode] = 0;
     minHeap.insert({0, startNode});
     
-    while (minHeap.root != nullptr) {
+    while (!minHeap.heap.empty()) {
         auto current = minHeap.find_min();
         minHeap.delete_min();
         
@@ -51,7 +52,7 @@ inline void dijkstra(int startNode) {
 
         visited[x] = true;
 
-        for (int i = head[x]; i; i = edges[i].next) {
+        for (int i = head[x]; i != 0; i = edges[i].next) {
             int y = edges[i].to;
             relax(x, y, edges[i].distance);
         }
@@ -59,8 +60,11 @@ inline void dijkstra(int startNode) {
 }
 
 int main() {
-    int startNode, endNode;
     scanf("%d%d%d", &numNodes, &numEdges, &startNode);
+    
+    memset(head, 0, sizeof(head));
+    memset(visited, false, sizeof(visited));
+    
     for (int i = 1; i <= numNodes; ++i)
         distances[i] = numeric_limits<int>::max();
     
@@ -70,7 +74,7 @@ int main() {
         addEdge(u, v, d);
     }
     
-    dijkstra(startNode);
+    dijkstra();
     
     for (int i = 1; i <= numNodes; i++)
         printf("%d ", distances[i]);

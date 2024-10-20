@@ -1,81 +1,83 @@
+#ifndef BINARYHEAP_HPP
+#define BINARYHEAP_HPP
+
 #include <vector>
+#include <stdexcept>
 
 template <class T>
-struct BinaryHeap{
-    std::vector<T>* heap;
+struct BinaryHeap {
+    std::vector<T> heap;
 
-    BinaryHeap(){
-        heap = new std::vector<T>;
-        heap->clear();
+    BinaryHeap() {
+        heap.clear();
     }
 
-    void insert(T key){
-        heap = _insert(heap, key);
+    void insert(T key) {
+        heap.push_back(key);
+        _up_shift();
     }
 
-    T find_min(){
-        return heap->at(0);
+    T find_min() {
+        if (heap.empty()) {
+            throw std::underflow_error("Heap is empty");
+        }
+        return heap[0];
     }
 
-    void delete_min(){
-        heap = _delete_min(heap);
+    void delete_min() {
+        if (heap.empty()) {
+            throw std::underflow_error("Heap is empty");
+        }
+        heap[0] = heap.back();
+        heap.pop_back();
+        if (!heap.empty()) {
+            _down_shift();
+        }
     }
 
-    std::vector<T>* _up_shift(std::vector<T>* heap){
-        size_t child = heap->size() - 1;
-        size_t parent = child / 2;
+private:
+    void _up_shift() {
+        size_t child = heap.size() - 1;
+        size_t parent = (child - 1) / 2;
 
-        T tmp = heap->at(child);
+        T tmp = heap[child];
 
-        while(child != 0){
-            if(heap->at(parent) <= tmp){
+        while (child > 0) {
+            if (heap[parent] <= tmp) {
                 break;
             }
-            else{
-                heap->at(child) = heap->at(parent);
-                child = parent;
-                parent = child / 2;
-            }
+            heap[child] = heap[parent];
+            child = parent;
+            parent = (child - 1) / 2;
         }
 
-        heap->at(child) = tmp;
-        return heap;
+        heap[child] = tmp;
     }
 
-    std::vector<T>* _down_shift(std::vector<T>* heap){
+    void _down_shift() {
         size_t parent = 0;
         size_t left = 2 * parent + 1;
-        size_t end = heap->size() - 1;
+        size_t end = heap.size() - 1;
 
-        T tmp = heap->at(parent);
+        T tmp = heap[parent];
 
-        while(left <= end){
-            if(left < end && heap->at(left) > heap->at(left + 1)){
-                left ++;
+        while (left <= end) {
+            size_t right = left + 1;
+            if (right <= end && heap[left] > heap[right]) {
+                left = right;
             }
 
-            if(tmp <= heap->at(left)){
+            if (tmp <= heap[left]) {
                 break;
             }
 
-            heap->at(parent) = heap->at(left);
+            heap[parent] = heap[left];
             parent = left;
             left = 2 * parent + 1;
         }
 
-        heap->at(parent) = tmp;
-
-        return heap;
-    }
-
-    std::vector<T>* _insert(std::vector<T>* heap, T key){
-        heap->push_back(key);
-        return _up_shift(heap);
-    }
-
-    std::vector<T>* _delete_min(std::vector<T>* heap){
-        heap->at(0) = heap->at(heap->size() - 1);
-        heap->pop_back();
-        return _down_shift(heap);
+        heap[parent] = tmp;
     }
 };
+
+#endif
