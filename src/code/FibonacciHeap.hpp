@@ -27,12 +27,12 @@ struct FibonacciHeap{
 
         // 合并子节点到根列表
         this->heap = _delete_min(this->heap);
-        delete minNode;  // 删除原来的最小节点
+        delete minNode;
     }
 
     void merge(FibonacciHeap<T>* other){
         this->heap = _merge(this->heap, other->heap);
-        other->heap = nullptr;  // other 置空以避免重复使用
+        other->heap = nullptr;
     }
 
     bool is_exist(T key){
@@ -48,12 +48,10 @@ struct FibonacciHeap{
         if(p == nullptr) return q;
         if(q == nullptr) return p;
 
-        // 保证 p 是较小的根节点
         if(p->key > q->key){
             auto t = p; p = q; q = t;
         }
 
-        // 连接 p 和 q 的根节点
         FibonacciNode<T>* nxt_p = p->next;
         FibonacciNode<T>* pre_q = q->prev;
 
@@ -88,22 +86,19 @@ struct FibonacciHeap{
     }
 
     FibonacciNode<T>* _delete_min(FibonacciNode<T>* node){
-        _unmark_and_unparent_all(node->child);  // 将最小节点的孩子合并到根列表
+        _unmark_and_unparent_all(node->child);
 
         if(node->next == node){
-            node = node->child;  // 如果只有一个根节点，直接返回孩子
+            node = node->child;
         } else {
-            // 从根链表中删除最小节点
             node->next->prev = node->prev;
             node->prev->next = node->next;
 
-            // 合并子节点和根节点
             node = _merge(node->next, node->child);
         }
 
-        if(node == nullptr) return node;  // 如果没有节点返回空
+        if(node == nullptr) return node; 
 
-        // 准备合并同度数的树
         FibonacciNode<T>* trees[64] = {nullptr};
         while(true){
             if(trees[node->degree] != nullptr){
@@ -115,7 +110,6 @@ struct FibonacciHeap{
 
                 trees[node->degree] = nullptr;
 
-                // 比较两个根节点的键值
                 if(node->key < tree->key){
                     tree->prev->next = tree->next;
                     tree->next->prev = tree->prev;
@@ -146,7 +140,6 @@ struct FibonacciHeap{
             node = node->next;
         }
 
-        // 找出新的最小根节点
         FibonacciNode<T>* min = node;
         FibonacciNode<T>* start = node;
 
