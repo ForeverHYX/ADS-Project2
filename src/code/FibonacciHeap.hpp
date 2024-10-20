@@ -24,6 +24,10 @@ struct FibonacciHeap{
 
     }
 
+    void decrease_key(FibonacciNode<T>* node, T value){
+        this->heap = _decrease_key(this->heap, node, value);
+    }
+
     void merge(FibonacciHeap<T>* other){
         this->heap = (this->heap, other->heap);
         // other->heap = nullptr;
@@ -161,6 +165,59 @@ struct FibonacciHeap{
 
         return nullptr;
     }
+
+    FibonacciNode<T>* _cut(FibonacciNode<T>* heap, FibonacciNode<T>* node){
+        if(node->next == node){
+            node->parent->child = nullptr;
+        }
+        else{
+            node->next->prev = node->prev;
+            node->prev->next = node->next;
+
+            node->parent->child = node->next;
+        }
+
+        node->next = node->prev = node;
+        node->marked = false;
+
+        return _merge(heap, node);
+    }
+
+    FibonacciNode<T>* _decrease_key(FibonacciNode<T>* heap, FibonacciNode<T>* node,T value){
+        if(node->key < value){
+            return heap;
+        }
+
+        node->key = value;
+        if(node->parent != nullptr){
+            if(node->key < node->parent->key){
+                heap = _cut(heap, node);
+
+                FibonacciNode<T>* parent = node->parent;
+                node->parent = nullptr;
+
+                while(parent != nullptr && parent->marked == true){
+                    heap = _cut(heap, parent);
+
+                    node = parent;
+                    parent = node->parent;
+                    node->parent = nullptr;
+                }
+
+                if(parent != nullptr && parent->parent != nullptr){
+                    parent->marked = true;
+                }
+            }
+        }
+        else{
+            if(node->key < heap->key){
+                heap = node;
+            }
+        }
+
+        return heap;
+    }
+
 };
 
 template <class T>
