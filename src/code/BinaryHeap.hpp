@@ -9,6 +9,10 @@ struct BinaryHeap{
         heap->clear();
     }
 
+    bool is_empty(){
+        return heap->size() == 0;
+    }
+
     void insert(T key){
         heap = _insert(heap, key);
     }
@@ -43,14 +47,12 @@ struct BinaryHeap{
     }
 
     std::vector<T>* _down_shift(std::vector<T>* heap){
+        if(heap->size() == 0)   return heap;
         size_t parent = 0;
         size_t left = 2 * parent + 1;
-        size_t end = heap->size() - 1;
-
         T tmp = heap->at(parent);
-
-        while(left <= end){
-            if(left < end && heap->at(left) > heap->at(left + 1)){
+        while(left < heap->size()){
+            if(left + 1 < heap->size() && heap->at(left) > heap->at(left + 1)){
                 left ++;
             }
 
@@ -74,6 +76,7 @@ struct BinaryHeap{
     }
 
     std::vector<T>* _delete_min(std::vector<T>* heap){
+        if(heap->size() == 0) return heap;
         heap->at(0) = heap->at(heap->size() - 1);
         heap->pop_back();
         return _down_shift(heap);

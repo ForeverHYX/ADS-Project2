@@ -1,4 +1,58 @@
-#include <iostream>
+#include<cstdio>
+// #include"SkewHeap.hpp"
+// #include"BinaryHeap.hpp"
+// #include "FibonacciHeap.hpp"
+// #include"Heap.hpp"
+// #include"BinomialHeap.hpp"
+#include<queue>
+const int MaxN = 100010, MaxM = 500010;
+
+struct edge
+{
+    int to, dis, next;
+};
+
+edge e[MaxM];
+int head[MaxN], dis[MaxN], cnt;
+bool vis[MaxN];
+int n, m, s;
+
+inline void add_edge( int u, int v, int d )
+{
+    cnt++;
+    e[cnt].dis = d;
+    e[cnt].to = v;
+    e[cnt].next = head[u];
+    head[u] = cnt;
+}
+
+struct node{
+    int pos;
+    int dis;
+
+    node(int pos, int dis): dis(pos), pos(dis){};
+
+    bool operator<(const node& x)const{
+        return this->dis < x.dis;
+    }
+    
+    bool operator<=(const node& x){
+        return this->dis <= x.dis;
+    }
+    
+    bool operator>(const node& x){
+        return this->dis > x.dis;
+    }
+    
+    bool operator>=(const node& x){
+        return this->dis >= x.dis;
+    }
+    
+    bool operator==(const node& x){
+        return this->dis == x.dis;
+    }
+};
+
 template <class T>
 struct FibonacciHeap;
 
@@ -29,10 +83,6 @@ struct FibonacciHeap{
     T find_min(){
         if(this->heap != nullptr)
             return this->heap->key;
-    }
-
-    FibonacciNode<T>* find_node(T key){
-        return _find_node(heap, key);
     }
 
     void delete_min(){
@@ -81,24 +131,6 @@ struct FibonacciHeap{
         pre_q->next = nxt_p;
 
         return p;
-    }
-
-    FibonacciNode<T>* _find_node(FibonacciNode<T>* node, T key){
-        if(node == nullptr){
-            return nullptr;
-        }
-        FibonacciNode<T>* c = node;
-        do{
-            if(c->key == key){
-                return c;
-            }
-            FibonacciNode<T>* t = _find_node(c->child, key);
-            if(t != nullptr){
-                return t;
-            }
-            c = c->next;
-        }while(c != node);
-        return nullptr;
     }
 
     void _unmark_and_unparent_all(FibonacciNode<T>* node){
@@ -274,3 +306,69 @@ struct FibonacciNode{
 
     FibonacciNode(T key): key(key), marked(false), degree(0), prev(this), next(this), child(nullptr), parent(nullptr) {}
 };
+
+
+
+// std::priority_queue<node> q;
+
+// SkewHeap<node> q;
+
+// BinaryHeap<node> q;
+
+FibonacciHeap<node> q;
+
+// Heap<node> q;
+
+// BinomialHeap<node> q;
+
+inline void dijkstra()
+{
+    dis[s] = 0;
+    auto t = new node(0, s);
+    q.insert( *t );
+    while( !q.is_empty() )
+    {
+        node tmp = q.find_min();
+        q.delete_min();
+        int x = tmp.pos, d = tmp.dis;
+        if( vis[x] )
+            continue;
+        vis[x] = 1;
+        for( int i = head[x]; i; i = e[i].next )
+        {
+            int y = e[i].to;
+            if( dis[y] > dis[x] + e[i].dis )
+            {
+                dis[y] = dis[x] + e[i].dis;
+                if( !vis[y] )
+                {
+                    // t = new node(dis[y], y);
+                    // q.insert(*t );
+
+                    q.decrease_key()
+                }
+            }
+        }
+    }
+}
+
+
+int main()
+{
+    scanf( "%d%d%d", &n, &m, &s );
+    for(int i = 1; i <= n; ++i)dis[i] = 0x7fffffff;
+    for(  int i = 0; i < m; ++i )
+    {
+         int u, v, d;
+        scanf( "%d%d%d", &u, &v, &d );
+        add_edge( u, v, d );
+    }
+    dijkstra();
+    for( int i = 1; i <= n; i++ )
+        printf( "%d ", dis[i] );
+    return 0;
+}
+
+
+
+
