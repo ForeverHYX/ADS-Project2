@@ -62,14 +62,15 @@ clock_t start, stop;
 double duration;
 int main()
 {
+    srand((unsigned int)time(0));
     int startnode,destination;
     double once_time;
     duration = 0;
     
-    for (int k = 1; k <= 10; k++)
+    for (int k = 1; k <= 1000; k++)
     {
-        srand((unsigned int)time(0));
-        FILE *file = fopen("SAMPLE.txt", "r");
+        
+        FILE *file = fopen("SAMPLE.txt", "r");//biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
         fscanf(file, "%d %d\n", &numNodes, &numEdges);
         for (int i = 1; i <= numNodes; ++i){
             distances[i] = numeric_limits<int>::max();

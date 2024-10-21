@@ -71,21 +71,23 @@ clock_t start, stop;
 double duration;
 int main()
 {
-    int startnode,destination;
+    srand((unsigned int)time(0));
+    int startnode, destination;
     double once_time;
     duration = 0;
-    
-    for (int k = 1; k <= 10; k++)
+
+    for (int k = 1; k <= 1000; k++)
     {
-        srand((unsigned int)time(0));
-        FILE *file = fopen("SAMPLE.txt", "r");
+
+        FILE *file = fopen("SAMPLE.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
         fscanf(file, "%d %d\n", &numNodes, &numEdges);
-        for (int i = 1; i <= numNodes; ++i){
+        for (int i = 1; i <= numNodes; ++i)
+        {
             distances[i] = numeric_limits<int>::max();
-            head[i]=0;
-            visited[i]=false;
+            head[i] = 0;
+            visited[i] = false;
         }
-        edgeCount=0;
+        edgeCount = 0;
         for (int i = 0; i < numEdges; ++i)
         {
             char a;
@@ -95,32 +97,32 @@ int main()
             addEdge(u, v, d);
         }
 
-        startnode = (rand()*k)%30000;
-        startnode*=30000;
-        startnode+=rand()%30000;
+        startnode = (rand() * k) % 30000;
+        startnode *= 30000;
+        startnode += rand() % 30000;
         startnode %= numNodes;
         startnode++;
-        
-        do {
-        destination = (rand()*k)%30000;
-        destination*=30000;
-        destination+=rand()%30000;
-        destination %= numNodes;
-        destination++;
-        }while(destination==startnode);
-        
+
+        do
+        {
+            destination = (rand() * k) % 30000;
+            destination *= 30000;
+            destination += rand() % 30000;
+            destination %= numNodes;
+            destination++;
+        } while (destination == startnode);
 
         start = clock();
         dijkstra(startnode);
         stop = clock();
         once_time = ((double)(stop - start)) / CLK_TCK;
-        
+
         duration += once_time;
 
         printf("the length of shortest path from %d to %d is %d\n", startnode, destination, distances[destination]);
     }
 
-    printf("this function costs average %lf sec", duration/100);
+    printf("this function costs average %lf sec", duration / 100);
 
     return 0;
 }

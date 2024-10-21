@@ -2,15 +2,16 @@
 #include <vector>
 #include <cstdio>
 #include <limits>
-#include<time.h>
+#include <time.h>
 #include "BinomialHeap.hpp"
 
 using namespace std;
 
-const long  int MAX_NODES = 25000000;
+const long int MAX_NODES = 25000000;
 const long int MAX_EDGES = 60000000;
 
-struct Edge {
+struct Edge
+{
     int to, distance, next;
 };
 
@@ -19,7 +20,8 @@ int head[MAX_NODES], distances[MAX_NODES], edgeCount;
 bool visited[MAX_NODES];
 int numNodes, numEdges;
 
-inline void addEdge(int u,int v,int d) {
+inline void addEdge(int u, int v, int d)
+{
     edgeCount++;
     edges[edgeCount].distance = d;
     edges[edgeCount].to = v;
@@ -27,32 +29,38 @@ inline void addEdge(int u,int v,int d) {
     head[u] = edgeCount;
 }
 
-BinomialHeap<pair<int,int>> minHeap;
+BinomialHeap<pair<int, int>> minHeap;
 
-inline void relax(int x,int y,int d) {
-    if (distances[y] > distances[x] + d) {
+inline void relax(int x, int y, int d)
+{
+    if (distances[y] > distances[x] + d)
+    {
         distances[y] = distances[x] + d;
-        if (!visited[y]) {
+        if (!visited[y])
+        {
             minHeap.insert({distances[y], y});
         }
     }
 }
 
-inline void dijkstra(int startNode) {
+inline void dijkstra(int startNode)
+{
     distances[startNode] = 0;
     minHeap.insert({0, startNode});
-    
-    while (minHeap.root_node != nullptr) {
-        auto current = minHeap.find_min();  // Find minimum distance node
+
+    while (minHeap.root_node != nullptr)
+    {
+        auto current = minHeap.find_min(); // Find minimum distance node
         minHeap.delete_min();
-        
-        int x = current.second;  // current.second holds the vertex
+
+        int x = current.second; // current.second holds the vertex
         if (visited[x])
             continue;
 
         visited[x] = true;
 
-        for (int i = head[x]; i; i = edges[i].next) {
+        for (int i = head[x]; i; i = edges[i].next)
+        {
             int y = edges[i].to;
             relax(x, y, edges[i].distance);
         }
@@ -62,14 +70,15 @@ clock_t start, stop;
 double duration;
 int main()
 {
+    srand((unsigned int)time(0));
     int startnode,destination;
     double once_time;
     duration = 0;
     
-    for (int k = 1; k <= 10; k++)
+    for (int k = 1; k <= 1000; k++)
     {
-        srand((unsigned int)time(0));
-        FILE *file = fopen("SAMPLE.txt", "r");
+        
+        FILE *file = fopen("SAMPLE.txt", "r");//biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
         fscanf(file, "%d %d\n", &numNodes, &numEdges);
         for (int i = 1; i <= numNodes; ++i){
             distances[i] = numeric_limits<int>::max();
