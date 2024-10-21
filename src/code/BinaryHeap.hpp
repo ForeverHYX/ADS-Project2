@@ -12,9 +12,18 @@ struct BinaryHeap {
         heap.clear();
     }
 
+<<<<<<< HEAD
     void insert(T key) {
         heap.push_back(key);
         _up_shift();
+=======
+    bool is_empty(){
+        return heap->size() == 0;
+    }
+
+    void insert(T key){
+        heap = _insert(heap, key);
+>>>>>>> bbc157ddd98f4fb7af4e5279a68fd28a233f7fb7
     }
 
     T find_min() {
@@ -54,6 +63,7 @@ private:
         heap[child] = tmp;
     }
 
+<<<<<<< HEAD
     void _down_shift() {
         size_t parent = 0;
         size_t left = 2 * parent + 1;
@@ -65,6 +75,16 @@ private:
             size_t right = left + 1;
             if (right <= end && heap[left] > heap[right]) {
                 left = right;
+=======
+    std::vector<T>* _down_shift(std::vector<T>* heap){
+        if(heap->size() == 0)   return heap;
+        size_t parent = 0;
+        size_t left = 2 * parent + 1;
+        T tmp = heap->at(parent);
+        while(left < heap->size()){
+            if(left + 1 < heap->size() && heap->at(left) > heap->at(left + 1)){
+                left ++;
+>>>>>>> bbc157ddd98f4fb7af4e5279a68fd28a233f7fb7
             }
 
             if (tmp <= heap[left]) {
@@ -76,7 +96,25 @@ private:
             left = 2 * parent + 1;
         }
 
+<<<<<<< HEAD
         heap[parent] = tmp;
+=======
+        heap->at(parent) = tmp;
+
+        return heap;
+    }
+
+    std::vector<T>* _insert(std::vector<T>* heap, T key){
+        heap->push_back(key);
+        return _up_shift(heap);
+    }
+
+    std::vector<T>* _delete_min(std::vector<T>* heap){
+        if(heap->size() == 0) return heap;
+        heap->at(0) = heap->at(heap->size() - 1);
+        heap->pop_back();
+        return _down_shift(heap);
+>>>>>>> bbc157ddd98f4fb7af4e5279a68fd28a233f7fb7
     }
 };
 

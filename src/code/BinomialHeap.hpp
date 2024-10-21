@@ -25,6 +25,10 @@ struct BinomialHeap{
     void merge(BinomialHeap* other);
     bool is_exist(T key);
 
+    bool is_empty(){
+        return root_node == nullptr;
+    }
+
     BinomialNode<T>* merge_root(BinomialNode<T>* p, BinomialNode<T>* q);
     void link(BinomialNode<T>* root, BinomialNode<T>* child);
     BinomialNode<T>* merge(BinomialNode<T>* p, BinomialNode<T>* q);

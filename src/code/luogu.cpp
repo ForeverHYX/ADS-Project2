@@ -1,4 +1,58 @@
-#include <iostream>
+#include<cstdio>
+// #include"SkewHeap.hpp"
+// #include"BinaryHeap.hpp"
+// #include "FibonacciHeap.hpp"
+// #include"Heap.hpp"
+// #include"BinomialHeap.hpp"
+#include<queue>
+const int MaxN = 100010, MaxM = 500010;
+
+struct edge
+{
+    int to, dis, next;
+};
+
+edge e[MaxM];
+int head[MaxN], dis[MaxN], cnt;
+bool vis[MaxN];
+int n, m, s;
+
+inline void add_edge( int u, int v, int d )
+{
+    cnt++;
+    e[cnt].dis = d;
+    e[cnt].to = v;
+    e[cnt].next = head[u];
+    head[u] = cnt;
+}
+
+struct node{
+    int pos;
+    int dis;
+
+    node(int pos, int dis): dis(pos), pos(dis){};
+
+    bool operator<(const node& x)const{
+        return this->dis < x.dis;
+    }
+    
+    bool operator<=(const node& x){
+        return this->dis <= x.dis;
+    }
+    
+    bool operator>(const node& x){
+        return this->dis > x.dis;
+    }
+    
+    bool operator>=(const node& x){
+        return this->dis >= x.dis;
+    }
+    
+    bool operator==(const node& x){
+        return this->dis == x.dis;
+    }
+};
+
 template <class T>
 struct FibonacciHeap;
 
@@ -31,17 +85,13 @@ struct FibonacciHeap{
             return this->heap->key;
     }
 
-    FibonacciNode<T>* find_node(T key){
-        return _find_node(heap, key);
-    }
-
     void delete_min(){
         FibonacciNode<T>* minNode = this->heap;
         if(minNode == nullptr) return;
 
         // 合并子节点到根列表
         this->heap = _delete_min(this->heap);
-        delete minNode;
+        delete minNode;  // 删除原来的最小节点
     }
 
     void decrease_key(FibonacciNode<T>* node, T value){
@@ -50,7 +100,7 @@ struct FibonacciHeap{
 
     void merge(FibonacciHeap<T>* other){
         this->heap = _merge(this->heap, other->heap);
-        other->heap = nullptr;
+        other->heap = nullptr;  // other 置空以避免重复使用
     }
 
     bool is_exist(T key){
@@ -66,10 +116,12 @@ struct FibonacciHeap{
         if(p == nullptr) return q;
         if(q == nullptr) return p;
 
+        // 保证 p 是较小的根节点
         if(p->key > q->key){
             auto t = p; p = q; q = t;
         }
 
+        // 连接 p 和 q 的根节点
         FibonacciNode<T>* nxt_p = p->next;
         FibonacciNode<T>* pre_q = q->prev;
 
@@ -79,24 +131,6 @@ struct FibonacciHeap{
         pre_q->next = nxt_p;
 
         return p;
-    }
-
-    FibonacciNode<T>* _find_node(FibonacciNode<T>* node, T key){
-        if(node == nullptr){
-            return nullptr;
-        }
-        FibonacciNode<T>* c = node;
-        do{
-            if(c->key == key){
-                return c;
-            }
-            FibonacciNode<T>* t = _find_node(c->child, key);
-            if(t != nullptr){
-                return t;
-            }
-            c = c->next;
-        }while(c != node);
-        return nullptr;
     }
 
     void _unmark_and_unparent_all(FibonacciNode<T>* node){
@@ -122,19 +156,22 @@ struct FibonacciHeap{
     }
 
     FibonacciNode<T>* _delete_min(FibonacciNode<T>* node){
-        _unmark_and_unparent_all(node->child);
+        _unmark_and_unparent_all(node->child);  // 将最小节点的孩子合并到根列表
 
         if(node->next == node){
-            node = node->child;
+            node = node->child;  // 如果只有一个根节点，直接返回孩子
         } else {
+            // 从根链表中删除最小节点
             node->next->prev = node->prev;
             node->prev->next = node->next;
 
+            // 合并子节点和根节点
             node = _merge(node->next, node->child);
         }
 
-        if(node == nullptr) return node; 
+        if(node == nullptr) return node;  // 如果没有节点返回空
 
+        // 准备合并同度数的树
         FibonacciNode<T>* trees[64] = {nullptr};
         while(true){
             if(trees[node->degree] != nullptr){
@@ -146,6 +183,7 @@ struct FibonacciHeap{
 
                 trees[node->degree] = nullptr;
 
+                // 比较两个根节点的键值
                 if(node->key < tree->key){
                     tree->prev->next = tree->next;
                     tree->next->prev = tree->prev;
@@ -176,6 +214,7 @@ struct FibonacciHeap{
             node = node->next;
         }
 
+        // 找出新的最小根节点
         FibonacciNode<T>* min = node;
         FibonacciNode<T>* start = node;
 
@@ -267,3 +306,69 @@ struct FibonacciNode{
 
     FibonacciNode(T key): key(key), marked(false), degree(0), prev(this), next(this), child(nullptr), parent(nullptr) {}
 };
+
+
+
+// std::priority_queue<node> q;
+
+// SkewHeap<node> q;
+
+// BinaryHeap<node> q;
+
+FibonacciHeap<node> q;
+
+// Heap<node> q;
+
+// BinomialHeap<node> q;
+
+inline void dijkstra()
+{
+    dis[s] = 0;
+    auto t = new node(0, s);
+    q.insert( *t );
+    while( !q.is_empty() )
+    {
+        node tmp = q.find_min();
+        q.delete_min();
+        int x = tmp.pos, d = tmp.dis;
+        if( vis[x] )
+            continue;
+        vis[x] = 1;
+        for( int i = head[x]; i; i = e[i].next )
+        {
+            int y = e[i].to;
+            if( dis[y] > dis[x] + e[i].dis )
+            {
+                dis[y] = dis[x] + e[i].dis;
+                if( !vis[y] )
+                {
+                    // t = new node(dis[y], y);
+                    // q.insert(*t );
+
+                    q.decrease_key()
+                }
+            }
+        }
+    }
+}
+
+
+int main()
+{
+    scanf( "%d%d%d", &n, &m, &s );
+    for(int i = 1; i <= n; ++i)dis[i] = 0x7fffffff;
+    for(  int i = 0; i < m; ++i )
+    {
+         int u, v, d;
+        scanf( "%d%d%d", &u, &v, &d );
+        add_edge( u, v, d );
+    }
+    dijkstra();
+    for( int i = 1; i <= n; i++ )
+        printf( "%d ", dis[i] );
+    return 0;
+}
+
+
+
+

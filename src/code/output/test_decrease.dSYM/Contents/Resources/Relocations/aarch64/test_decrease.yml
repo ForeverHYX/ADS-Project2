@@ -1,0 +1,28 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/vanadium/Documents/study/ads/project/ADS-Project2/src/code/output/test_decrease'
+relocations:
+  - { offset: 0x3995, size: 0x8, addend: 0x0, symName: __ZNSt3__14endlB8ue170006IcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_, symObjAddr: 0x4D0, symBinAddr: 0x1000031EC, symSize: 0x58 }
+  - { offset: 0x39D5, size: 0x8, addend: 0x0, symName: __ZNSt3__19use_facetB8ue170006INS_5ctypeIcEEEERKT_RKNS_6localeE, symObjAddr: 0x81C, symBinAddr: 0x100003538, symSize: 0x2C }
+  - { offset: 0x4C4D, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x0, symBinAddr: 0x100002D1C, symSize: 0x38C }
+  - { offset: 0x5008, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiEC1Ev, symObjAddr: 0x38C, symBinAddr: 0x1000030A8, symSize: 0x2C }
+  - { offset: 0x5030, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE6insertEi, symObjAddr: 0x3B8, symBinAddr: 0x1000030D4, symSize: 0x84 }
+  - { offset: 0x5070, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE8is_emptyEv, symObjAddr: 0x43C, symBinAddr: 0x100003158, symSize: 0x24 }
+  - { offset: 0x5094, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE8find_minEv, symObjAddr: 0x460, symBinAddr: 0x10000317C, symSize: 0x44 }
+  - { offset: 0x5196, size: 0x8, addend: 0x0, symName: __ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsB8ue170006EPFRS3_S4_E, symObjAddr: 0x4A4, symBinAddr: 0x1000031C0, symSize: 0x2C }
+  - { offset: 0x51C8, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE10delete_minEv, symObjAddr: 0x528, symBinAddr: 0x100003244, symSize: 0x7C }
+  - { offset: 0x51FA, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE12decrease_keyEP13FibonacciNodeIiEi, symObjAddr: 0x5A4, symBinAddr: 0x1000032C0, symSize: 0x44 }
+  - { offset: 0x523A, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE9find_nodeEi, symObjAddr: 0x5E8, symBinAddr: 0x100003304, symSize: 0x30 }
+  - { offset: 0x526C, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiEC2Ev, symObjAddr: 0x618, symBinAddr: 0x100003334, symSize: 0x18 }
+  - { offset: 0x5294, size: 0x8, addend: 0x0, symName: __ZN13FibonacciNodeIiEC1Ei, symObjAddr: 0x630, symBinAddr: 0x10000334C, symSize: 0x34 }
+  - { offset: 0x52CB, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE6_mergeEP13FibonacciNodeIiES3_, symObjAddr: 0x664, symBinAddr: 0x100003380, symSize: 0xEC }
+  - { offset: 0x5343, size: 0x8, addend: 0x0, symName: __ZN13FibonacciNodeIiEC2Ei, symObjAddr: 0x750, symBinAddr: 0x10000346C, symSize: 0x40 }
+  - { offset: 0x537A, size: 0x8, addend: 0x0, symName: __ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenB8ue170006Ec, symObjAddr: 0x790, symBinAddr: 0x1000034AC, symSize: 0x8C }
+  - { offset: 0x53F1, size: 0x8, addend: 0x0, symName: __ZNKSt3__15ctypeIcE5widenB8ue170006Ec, symObjAddr: 0x848, symBinAddr: 0x100003564, symSize: 0x38 }
+  - { offset: 0x5424, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE11_delete_minEP13FibonacciNodeIiE, symObjAddr: 0x890, symBinAddr: 0x1000035AC, symSize: 0x354 }
+  - { offset: 0x549D, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE24_unmark_and_unparent_allEP13FibonacciNodeIiE, symObjAddr: 0xBE4, symBinAddr: 0x100003900, symSize: 0x70 }
+  - { offset: 0x54DD, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE10_add_childEP13FibonacciNodeIiES3_, symObjAddr: 0xC54, symBinAddr: 0x100003970, symSize: 0xA4 }
+  - { offset: 0x551D, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE13_decrease_keyEP13FibonacciNodeIiES3_i, symObjAddr: 0xCF8, symBinAddr: 0x100003A14, symSize: 0x1C8 }
+  - { offset: 0x5587, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE4_cutEP13FibonacciNodeIiES3_, symObjAddr: 0xEC0, symBinAddr: 0x100003BDC, symSize: 0xC4 }
+  - { offset: 0x55C7, size: 0x8, addend: 0x0, symName: __ZN13FibonacciHeapIiE10_find_nodeEP13FibonacciNodeIiEi, symObjAddr: 0xF84, symBinAddr: 0x100003CA0, symSize: 0xE8 }
+...
