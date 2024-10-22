@@ -80,7 +80,7 @@ int main()
     for (int k = 1; k <= 1000; k++)
     {
 
-        FILE *file = fopen("linear_graph.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+        FILE *file = fopen("SAMPLE.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
         fscanf(file, "%d %d\n", &numNodes, &numEdges);
         for (int i = 1; i <= numNodes; ++i)
         {
@@ -100,10 +100,7 @@ int main()
 
         std::uniform_int_distribution<> dis(1, numNodes);
 
-        // 生成在1到numNodes之间的随机起始节点
         int startnode = dis(gen);
-
-        // 生成一个不同于startnode的随机目标节点
         int destination;
         do
         {
