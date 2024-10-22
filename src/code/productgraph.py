@@ -25,7 +25,7 @@ def generate_connected_graph(n, m):
 
 def print_graph_edges_linear(G,n):
     """打印图的边及其长度"""
-    filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/linear.txt'
+    filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/linear_graph.txt'
     with open(filepath,mode='w',encoding='utf-8') as file_obj:
         total_edges = G.number_of_edges()
         file_obj.write(f"{n} {2*total_edges}\n")

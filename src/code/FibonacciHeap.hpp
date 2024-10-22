@@ -1,3 +1,4 @@
+#include <iostream>
 template <class T>
 struct FibonacciHeap;
 
@@ -10,15 +11,28 @@ struct FibonacciHeap{
 
     FibonacciHeap(): heap(nullptr) {}
 
+    ~FibonacciHeap(){
+        while(this->heap != nullptr){
+            this->delete_min();
+        }
+    }
+
+    bool is_empty(){
+        return heap == nullptr;
+    }
+
     void insert(T key){
         auto n = new FibonacciNode<T>(key);
         this->heap = _merge(this->heap, n);
     }
 
     T find_min(){
-        if(this->heap == nullptr) 
-            throw std::runtime_error("Heap is empty");
-        return this->heap->key;
+        if(this->heap != nullptr)
+            return this->heap->key;
+    }
+
+    FibonacciNode<T>* find_node(T key){
+        return _find_node(heap, key);
     }
 
     void delete_min(){
@@ -28,6 +42,10 @@ struct FibonacciHeap{
         // 合并子节点到根列表
         this->heap = _delete_min(this->heap);
         delete minNode;  // 删除原来的最小节点
+    }
+
+    void decrease_key(FibonacciNode<T>* node, T value){
+        this->heap = _decrease_key(this->heap, node, value);
     }
 
     void merge(FibonacciHeap<T>* other){
@@ -63,6 +81,24 @@ struct FibonacciHeap{
         pre_q->next = nxt_p;
 
         return p;
+    }
+
+    FibonacciNode<T>* _find_node(FibonacciNode<T>* node, T key){
+        if(node == nullptr){
+            return nullptr;
+        }
+        FibonacciNode<T>* c = node;
+        do{
+            if(c->key == key){
+                return c;
+            }
+            FibonacciNode<T>* t = _find_node(c->child, key);
+            if(t != nullptr){
+                return t;
+            }
+            c = c->next;
+        }while(c != node);
+        return nullptr;
     }
 
     void _unmark_and_unparent_all(FibonacciNode<T>* node){
@@ -171,13 +207,66 @@ struct FibonacciHeap{
         } while(t != node);
         return nullptr;
     }
+
+    FibonacciNode<T>* _cut(FibonacciNode<T>* heap, FibonacciNode<T>* node){
+        if(node->next == node){
+            node->parent->child = nullptr;
+        }
+        else{
+            node->next->prev = node->prev;
+            node->prev->next = node->next;
+
+            node->parent->child = node->next;
+        }
+
+        node->next = node->prev = node;
+        node->marked = false;
+
+        return _merge(heap, node);
+    }
+
+    FibonacciNode<T>* _decrease_key(FibonacciNode<T>* heap, FibonacciNode<T>* node,T value){
+        if(node->key < value){
+            return heap;
+        }
+
+        node->key = value;
+        if(node->parent != nullptr){
+            if(node->key < node->parent->key){
+                heap = _cut(heap, node);
+
+                FibonacciNode<T>* parent = node->parent;
+                node->parent = nullptr;
+
+                while(parent != nullptr && parent->marked == true){
+                    heap = _cut(heap, parent);
+
+                    node = parent;
+                    parent = node->parent;
+                    node->parent = nullptr;
+                }
+
+                if(parent != nullptr && parent->parent != nullptr){
+                    parent->marked = true;
+                }
+            }
+        }
+        else{
+            if(node->key < heap->key){
+                heap = node;
+            }
+        }
+
+        return heap;
+    }
+
 };
 
 template <class T>
 struct FibonacciNode{
     T key;
     bool marked;
-    long int degree;
+    int degree;
     FibonacciNode<T>* prev;
     FibonacciNode<T>* next;
     FibonacciNode<T>* child;

@@ -9,6 +9,10 @@ struct SkewHeap{
         return this->root->key;
     }
 
+    bool is_empty(){
+        return root == nullptr;
+    }
+
     void delete_min(){
         this->root = _delete_min(this->root);
     }
@@ -26,10 +30,13 @@ struct SkewHeap{
         if(!y)  return x;
 
         if(x->key > y->key){
-            auto t = x; x = y;  y = t;
+            auto t = y;
+            y = x;
+            x = t;
         }
-
-        x->right_child = _merge(x->right_child, y);
+        SkewNode<T>* t = _merge(x->right_child, y);
+        x->right_child = x->left_child;
+        x->left_child = t;
         return x;
     }
 
