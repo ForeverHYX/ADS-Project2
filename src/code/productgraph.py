@@ -1,3 +1,11 @@
+'''
+Author: ForeverHYX 2937532336@qq.com
+Date: 2024-10-22 13:54:49
+LastEditors: ForeverHYX 2937532336@qq.com
+LastEditTime: 2024-10-22 14:01:54
+FilePath: /code/productgraph.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
 import networkx as nx
 import random
 
@@ -25,7 +33,11 @@ def generate_connected_graph(n, m):
 
 def print_graph_edges_linear(G,n):
     """打印图的边及其长度"""
+<<<<<<< HEAD
     filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/linear_graph1.txt'
+=======
+    filepath='linear_graph10.txt'
+>>>>>>> 43e0be296c3369939d233e833eff0e01783f8e62
     with open(filepath,mode='w',encoding='utf-8') as file_obj:
         total_edges = G.number_of_edges()
         file_obj.write(f"{n} {2*total_edges}\n")
@@ -36,7 +48,11 @@ def print_graph_edges_linear(G,n):
             file_obj.write(f"a {v+1} {u+1} {length}\n")
 def print_graph_edges_root(G,n):
     """打印图的边及其长度"""
+<<<<<<< HEAD
     filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/quadratic_root_graph1.txt'
+=======
+    filepath='quadratic_root_graph10.txt'
+>>>>>>> 43e0be296c3369939d233e833eff0e01783f8e62
     with open(filepath,mode='w',encoding='utf-8') as file_obj:
         total_edges = G.number_of_edges()
         file_obj.write(f"{n} {2*total_edges}\n")
@@ -47,7 +63,11 @@ def print_graph_edges_root(G,n):
             file_obj.write(f"a {v+1} {u+1} {length}\n")
 def print_graph_edges_quadratic(G,n):
     """打印图的边及其长度"""
+<<<<<<< HEAD
     filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/quadratic_graph1.txt'
+=======
+    filepath='quadratic_graph10.txt'
+>>>>>>> 43e0be296c3369939d233e833eff0e01783f8e62
     with open(filepath,mode='w',encoding='utf-8') as file_obj:
         total_edges = G.number_of_edges()
         file_obj.write(f"{n} {2*total_edges}\n")

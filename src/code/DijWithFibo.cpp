@@ -80,7 +80,7 @@ int main()
     for (int k = 1; k <= 100; k++)
     {
 
-        FILE *file = fopen("quadratic_graph.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+        FILE *file = fopen("linear_graph9.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
         fscanf(file, "%d %d\n", &numNodes, &numEdges);
         for (int i = 1; i <= numNodes; ++i)
         {
