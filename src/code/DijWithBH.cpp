@@ -3,12 +3,21 @@
 #include <cstdio>
 #include <limits>
 #include <cstring>
+<<<<<<< HEAD
+=======
+#include<time.h>
+>>>>>>> 460a2c1f3ac1e2c03ec0d780eb3197dd5e69ccf5
 #include "BinaryHeap.hpp"
 
 using namespace std;
 
+<<<<<<< HEAD
 const int MAX_NODES = 100010;
 const int MAX_EDGES = 500010;
+=======
+const int MAX_NODES = 5000000;
+const int MAX_EDGES = 10000000;
+>>>>>>> 460a2c1f3ac1e2c03ec0d780eb3197dd5e69ccf5
 
 struct Edge {
     int to, distance, next;
@@ -17,7 +26,11 @@ struct Edge {
 Edge edges[MAX_EDGES];
 int head[MAX_NODES], distances[MAX_NODES], edgeCount;
 bool visited[MAX_NODES];
+<<<<<<< HEAD
 int numNodes, numEdges, startNode;
+=======
+int numNodes, numEdges;
+>>>>>>> 460a2c1f3ac1e2c03ec0d780eb3197dd5e69ccf5
 
 inline void addEdge(int u, int v, int d) {
     edgeCount++;
@@ -38,7 +51,11 @@ inline void relax(int x, int y, int d) {
     }
 }
 
+<<<<<<< HEAD
 inline void dijkstra() {
+=======
+inline void dijkstra(int startNode) {
+>>>>>>> 460a2c1f3ac1e2c03ec0d780eb3197dd5e69ccf5
     distances[startNode] = 0;
     minHeap.insert({0, startNode});
     
@@ -58,6 +75,7 @@ inline void dijkstra() {
         }
     }
 }
+<<<<<<< HEAD
 
 int main() {
     scanf("%d%d%d", &numNodes, &numEdges, &startNode);
@@ -81,3 +99,64 @@ int main() {
     
     return 0;
 }
+=======
+clock_t start, stop;
+double duration;
+int main()
+{
+    srand((unsigned int)time(0));
+    int startnode, destination;
+    double once_time;
+    duration = 0;
+
+    for (int k = 1; k <= 100; k++)
+    {
+
+        FILE *file = fopen("linear_graph.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+        fscanf(file, "%d %d\n", &numNodes, &numEdges);
+        for (int i = 1; i <= numNodes; ++i)
+        {
+            distances[i] = numeric_limits<int>::max();
+            head[i] = 0;
+            visited[i] = false;
+        }
+        edgeCount = 0;
+        for (int i = 0; i < numEdges; ++i)
+        {
+            char a;
+            int u, v, d;
+            fscanf(file, "%c %d %d %d\n", &a, &u, &v, &d);
+
+            addEdge(u, v, d);
+        }
+
+        startnode = (rand() * k) % 30000;
+        startnode *= 30000;
+        startnode += rand() % 30000;
+        startnode %= numNodes;
+        startnode++;
+
+        do
+        {
+            destination = (rand() * k) % 30000;
+            destination *= 30000;
+            destination += rand() % 30000;
+            destination %= numNodes;
+            destination++;
+        } while (destination == startnode);
+
+        start = clock();
+        dijkstra(startnode);
+        stop = clock();
+        once_time = ((double)(stop - start)) / CLK_TCK;
+
+        duration += once_time;
+
+        printf("the length of shortest path from %d to %d is %d\n", startnode, destination, distances[destination]);
+    }
+
+    printf("this function costs average %lf sec", duration / 100);
+
+    return 0;
+}
+>>>>>>> 460a2c1f3ac1e2c03ec0d780eb3197dd5e69ccf5

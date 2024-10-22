@@ -10,6 +10,7 @@ struct BinaryHeap {
 
     BinaryHeap() {
         heap.clear();
+<<<<<<< HEAD
     }
 
 <<<<<<< HEAD
@@ -24,6 +25,13 @@ struct BinaryHeap {
     void insert(T key){
         heap = _insert(heap, key);
 >>>>>>> bbc157ddd98f4fb7af4e5279a68fd28a233f7fb7
+=======
+    }
+
+    void insert(T key) {
+        heap.push_back(key);
+        _up_shift();
+>>>>>>> 460a2c1f3ac1e2c03ec0d780eb3197dd5e69ccf5
     }
 
     T find_min() {
@@ -64,6 +72,9 @@ private:
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 460a2c1f3ac1e2c03ec0d780eb3197dd5e69ccf5
     void _down_shift() {
         size_t parent = 0;
         size_t left = 2 * parent + 1;
@@ -75,6 +86,7 @@ private:
             size_t right = left + 1;
             if (right <= end && heap[left] > heap[right]) {
                 left = right;
+<<<<<<< HEAD
 =======
     std::vector<T>* _down_shift(std::vector<T>* heap){
         if(heap->size() == 0)   return heap;
@@ -85,6 +97,8 @@ private:
             if(left + 1 < heap->size() && heap->at(left) > heap->at(left + 1)){
                 left ++;
 >>>>>>> bbc157ddd98f4fb7af4e5279a68fd28a233f7fb7
+=======
+>>>>>>> 460a2c1f3ac1e2c03ec0d780eb3197dd5e69ccf5
             }
 
             if (tmp <= heap[left]) {
@@ -96,6 +110,7 @@ private:
             left = 2 * parent + 1;
         }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         heap[parent] = tmp;
 =======
@@ -119,3 +134,10 @@ private:
 };
 
 #endif
+=======
+        heap[parent] = tmp;
+    }
+};
+
+#endif
+>>>>>>> 460a2c1f3ac1e2c03ec0d780eb3197dd5e69ccf5

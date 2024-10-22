@@ -1,6 +1,19 @@
 #include <queue>
 #include <vector>
 
+<<<<<<< HEAD
+=======
+struct node { // 确保比较器可以使用 node 结构体
+    long int dis;
+    long int pos;
+
+    // 比较运算符，确保可以与 node 比较
+    bool operator >(const node &other) const {
+        return dis > other.dis; // 对于最小堆，使用 dis > other.dis
+    }
+};
+
+>>>>>>> 460a2c1f3ac1e2c03ec0d780eb3197dd5e69ccf5
 template <class T>
 struct cmp {
     bool operator()(const T& x, const T& y) const {
