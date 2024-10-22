@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <limits>
 #include <time.h>
+#include <random>
+#include<chrono>
 #include "FibonacciHeap.hpp"
 
 using namespace std;
@@ -67,7 +69,6 @@ inline void dijkstra(int startNode)
     }
 }
 
-clock_t start, stop;
 double duration;
 int main()
 {
@@ -76,10 +77,10 @@ int main()
     double once_time;
     duration = 0;
 
-    for (int k = 1; k <= 100; k++)
+    for (int k = 1; k <= 1000; k++)
     {
 
-        FILE *file = fopen("linear_graph.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+        FILE *file = fopen("SAMPLE.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
         fscanf(file, "%d %d\n", &numNodes, &numEdges);
         for (int i = 1; i <= numNodes; ++i)
         {
@@ -97,32 +98,33 @@ int main()
             addEdge(u, v, d);
         }
 
-        startnode = (rand() * k) % 30000;
-        startnode *= 30000;
-        startnode += rand() % 30000;
-        startnode %= numNodes;
-        startnode++;
+        random_device rd;  
+        mt19937 gen(rd());
+        uniform_int_distribution<> dis(1, numNodes);
 
+        startnode = dis(gen);
         do
         {
-            destination = (rand() * k) % 30000;
-            destination *= 30000;
-            destination += rand() % 30000;
-            destination %= numNodes;
-            destination++;
+            destination = dis(gen);
         } while (destination == startnode);
 
-        start = clock();
+        auto start = chrono::high_resolution_clock::now();
         dijkstra(startnode);
-        stop = clock();
-        once_time = ((double)(stop - start)) / CLK_TCK;
+        auto stop = chrono::high_resolution_clock::now();
+        once_time = chrono::duration<double>(stop - start).count();
 
         duration += once_time;
 
         printf("the length of shortest path from %d to %d is %d\n", startnode, destination, distances[destination]);
     }
 
-    printf("this function costs average %lf sec", duration / 100);
+    double average_time = duration / 100;
+
+    if (average_time >= 1.0) {
+        printf("this function costs average %.6lf s\n", average_time);
+    } else {
+        printf("this function costs average %.6lf ms\n", average_time * 1000);
+    }
 
     return 0;
 }
