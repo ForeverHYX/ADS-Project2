@@ -2,8 +2,8 @@
 #include <vector>
 #include <cstdio>
 #include <limits>
-#include <time.h>
 #include <random>
+#include <chrono>
 #include "BinomialHeap.hpp"
 
 using namespace std;
@@ -32,6 +32,12 @@ inline void addEdge(int u, int v, int d)
 
 BinomialHeap<pair<int, int>> minHeap;
 
+// 用于记录insert和delete_min的累计时间
+double totalInsertTime = 0;
+double totalDeleteMinTime = 0;
+int insertCount = 0;
+int deleteMinCount = 0;
+
 inline void relax(int x, int y, int d)
 {
     if (distances[y] > distances[x] + d)
@@ -39,7 +45,12 @@ inline void relax(int x, int y, int d)
         distances[y] = distances[x] + d;
         if (!visited[y])
         {
+            // 记录insert操作的时间
+            auto start = chrono::high_resolution_clock::now();
             minHeap.insert({distances[y], y});
+            auto stop = chrono::high_resolution_clock::now();
+            totalInsertTime += chrono::duration<double>(stop - start).count();
+            insertCount++;
         }
     }
 }
@@ -47,12 +58,23 @@ inline void relax(int x, int y, int d)
 inline void dijkstra(int startNode)
 {
     distances[startNode] = 0;
+
+    // 记录首次insert操作的时间
+    auto startInsert = chrono::high_resolution_clock::now();
     minHeap.insert({0, startNode});
+    auto stopInsert = chrono::high_resolution_clock::now();
+    totalInsertTime += chrono::duration<double>(stopInsert - startInsert).count();
+    insertCount++;
 
     while (minHeap.root_node != nullptr)
     {
+        // 记录delete_min操作的时间
+        auto startDelete = chrono::high_resolution_clock::now();
         auto current = minHeap.find_min(); // Find minimum distance node
         minHeap.delete_min();
+        auto stopDelete = chrono::high_resolution_clock::now();
+        totalDeleteMinTime += chrono::duration<double>(stopDelete - startDelete).count();
+        deleteMinCount++;
 
         int x = current.second; // current.second holds the vertex
         if (visited[x])
@@ -67,18 +89,18 @@ inline void dijkstra(int startNode)
         }
     }
 }
-clock_t start, stop;
+
 double duration;
 int main()
 {
+    srand((unsigned int)time(0));
     int startnode, destination;
     double once_time;
     duration = 0;
 
-    for (int k = 1; k <= 1000; k++)
+    for (int k = 1; k <= 100; k++)
     {
-
-        FILE *file = fopen("linear_graph.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+        FILE *file = fopen("linear_graph1.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
         fscanf(file, "%d %d\n", &numNodes, &numEdges);
         for (int i = 1; i <= numNodes; ++i)
         {
@@ -96,33 +118,39 @@ int main()
             addEdge(u, v, d);
         }
 
-        random_device rd;  
+        random_device rd;
         mt19937 gen(rd());
         uniform_int_distribution<> dis(1, numNodes);
 
-        int startnode = dis(gen);
-        int destination;
+        startnode = dis(gen);
         do
         {
             destination = dis(gen);
         } while (destination == startnode);
 
-        start = clock();
+        auto start = chrono::high_resolution_clock::now();
         dijkstra(startnode);
-        stop = clock();
-        once_time = ((double)(stop - start)) / CLK_TCK;
+        auto stop = chrono::high_resolution_clock::now();
+        once_time = chrono::duration<double>(stop - start).count();
 
         duration += once_time;
 
         printf("the length of shortest path from %d to %d is %d\n", startnode, destination, distances[destination]);
     }
 
-    printf("this function costs average %lf sec", duration / 100);
+    double average_time = duration / 100;
+    double averageInsertTime = totalInsertTime / insertCount;
+    double averageDeleteMinTime = totalDeleteMinTime / deleteMinCount;
 
-    dijkstra(1);
-    for(int i=0;i<numNodes;i++){
-        printf("%d\n",distances[i]);
+    if (average_time >= 1.0) {
+        printf("this function costs average %.6lf s\n", average_time);
+    } else {
+        printf("this function costs average %.6lf ms\n", average_time * 1000);
     }
+
+    // 输出insert和delete_min操作的平均耗时
+    printf("average time per insert: %.6lf ms\n", averageInsertTime * 1000);
+    printf("average time per delete_min: %.6lf ms\n", averageDeleteMinTime * 1000);
 
     return 0;
 }

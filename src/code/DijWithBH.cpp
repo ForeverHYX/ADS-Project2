@@ -31,34 +31,45 @@ inline void addEdge(int u, int v, int d) {
 
 BinaryHeap<pair<int, int>> minHeap;
 
+// 用于记录insert和delete_min的累计时间
+double totalInsertTime = 0;
+double totalDeleteMinTime = 0;
+int insertCount = 0;
+int deleteMinCount = 0;
+
 inline void relax(int x, int y, int d) {
     if (distances[y] > distances[x] + d) {
         distances[y] = distances[x] + d;
         if (!visited[y]) {
-            bool found = false;
-            for (size_t i = 0; i < minHeap.heap.size(); ++i) {
-                if (minHeap.heap[i].second == y) {
-                    minHeap.decreaseKey(i, {distances[y], y});
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                minHeap.insert({distances[y], y});
-            }
+            // 记录insert操作的时间
+            auto start = chrono::high_resolution_clock::now();
+            minHeap.insert({distances[y], y});
+            auto stop = chrono::high_resolution_clock::now();
+            totalInsertTime += chrono::duration<double>(stop - start).count();
+            insertCount++;
         }
     }
 }
 
-
 inline void dijkstra(int startNode) {
     distances[startNode] = 0;
-    minHeap.insert({0, startNode});
     
+    // 记录首次insert操作的时间
+    auto startInsert = chrono::high_resolution_clock::now();
+    minHeap.insert({0, startNode});
+    auto stopInsert = chrono::high_resolution_clock::now();
+    totalInsertTime += chrono::duration<double>(stopInsert - startInsert).count();
+    insertCount++;
+
     while (!minHeap.heap.empty()) {
+        // 记录delete_min操作的时间
+        auto startDelete = chrono::high_resolution_clock::now();
         auto current = minHeap.find_min();
         minHeap.delete_min();
-        
+        auto stopDelete = chrono::high_resolution_clock::now();
+        totalDeleteMinTime += chrono::duration<double>(stopDelete - startDelete).count();
+        deleteMinCount++;
+
         int x = current.second;
         if (visited[x])
             continue;
@@ -79,10 +90,10 @@ int main()
     int startnode, destination;
     double once_time;
     duration = 0;
-    for (int k = 1; k <= 1000; k++)
+    for (int k = 1; k <= 100; k++)
     {
 
-        FILE *file = fopen("SAMPLE.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+        FILE *file = fopen("linear_graph1.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
         fscanf(file, "%d %d\n", &numNodes, &numEdges);
         for (int i = 1; i <= numNodes; ++i)
         {
@@ -120,13 +131,18 @@ int main()
         printf("the length of shortest path from %d to %d is %d\n", startnode, destination, distances[destination]);
     }
 
-    double average_time = duration / 1000;
+    double average_time = duration / 100;
+    double averageInsertTime = totalInsertTime / insertCount;
+    double averageDeleteMinTime = totalDeleteMinTime / deleteMinCount;
 
     if (average_time >= 1.0) {
         printf("this function costs average %.6lf s\n", average_time);
     } else {
         printf("this function costs average %.6lf ms\n", average_time * 1000);
     }
+
+    printf("average time per insert: %.6lf ms\n", averageInsertTime * 1000);
+    printf("average time per delete_min: %.6lf ms\n", averageDeleteMinTime * 1000);
 
     return 0;
 }

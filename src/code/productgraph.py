@@ -25,7 +25,7 @@ def generate_connected_graph(n, m):
 
 def print_graph_edges_linear(G,n):
     """打印图的边及其长度"""
-    filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/linear_graph.txt'
+    filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/linear_graph1.txt'
     with open(filepath,mode='w',encoding='utf-8') as file_obj:
         total_edges = G.number_of_edges()
         file_obj.write(f"{n} {2*total_edges}\n")
@@ -36,7 +36,7 @@ def print_graph_edges_linear(G,n):
             file_obj.write(f"a {v+1} {u+1} {length}\n")
 def print_graph_edges_root(G,n):
     """打印图的边及其长度"""
-    filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/quadratic_root_graph.txt'
+    filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/quadratic_root_graph1.txt'
     with open(filepath,mode='w',encoding='utf-8') as file_obj:
         total_edges = G.number_of_edges()
         file_obj.write(f"{n} {2*total_edges}\n")
@@ -47,7 +47,7 @@ def print_graph_edges_root(G,n):
             file_obj.write(f"a {v+1} {u+1} {length}\n")
 def print_graph_edges_quadratic(G,n):
     """打印图的边及其长度"""
-    filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/quadratic_graph.txt'
+    filepath='ADS/ads-project/ADS-P2-carry/ADS-Project2/src/code/quadratic_graph1.txt'
     with open(filepath,mode='w',encoding='utf-8') as file_obj:
         total_edges = G.number_of_edges()
         file_obj.write(f"{n} {2*total_edges}\n")
