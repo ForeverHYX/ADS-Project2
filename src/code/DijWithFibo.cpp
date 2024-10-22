@@ -4,7 +4,7 @@
 #include <limits>
 #include <time.h>
 #include <random>
-#include<chrono>
+#include <chrono>
 #include "FibonacciHeap.hpp"
 
 using namespace std;
@@ -76,53 +76,60 @@ int main()
     int startnode, destination;
     double once_time;
     duration = 0;
-
-    for (int k = 1; k <= 100; k++)
+    int times = 0;
+    for (int cnt = 1; cnt <= 1; cnt++)
     {
-
-        FILE *file = fopen("linear_graph9.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
-        fscanf(file, "%d %d\n", &numNodes, &numEdges);
-        for (int i = 1; i <= numNodes; ++i)
+        string filename = "SAMPLE.txt";//"quadratic_root_graph" + to_string(cnt) + ".txt";
+        for (int k = 1; k <= 100; k++)
         {
-            distances[i] = numeric_limits<int>::max();
-            head[i] = 0;
-            visited[i] = false;
+
+            FILE *file = fopen(filename.c_str(), "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+            fscanf(file, "%d %d\n", &numNodes, &numEdges);
+            for (int i = 1; i <= numNodes; ++i)
+            {
+                distances[i] = numeric_limits<int>::max();
+                head[i] = 0;
+                visited[i] = false;
+            }
+            edgeCount = 0;
+            for (int i = 0; i < numEdges; ++i)
+            {
+                char a;
+                int u, v, d;
+                fscanf(file, "%c %d %d %d\n", &a, &u, &v, &d);
+                addEdge(u, v, d);
+            }
+
+            random_device rd;
+            mt19937 gen(rd());
+            uniform_int_distribution<> dis(1, numNodes);
+
+            startnode = dis(gen);
+            do
+            {
+                destination = dis(gen);
+            } while (destination == startnode);
+
+            auto start = chrono::high_resolution_clock::now();
+            dijkstra(startnode);
+            auto stop = chrono::high_resolution_clock::now();
+            once_time = chrono::duration<double>(stop - start).count();
+
+            duration += once_time;
+            times++;
+
+            printf("the length of shortest path from %d to %d is %d, cost %.6lf ms\n", startnode, destination, distances[destination], once_time * 1000);
         }
-        edgeCount = 0;
-        for (int i = 0; i < numEdges; ++i)
-        {
-            char a;
-            int u, v, d;
-            fscanf(file, "%c %d %d %d\n", &a, &u, &v, &d);
-
-            addEdge(u, v, d);
-        }
-
-        random_device rd;  
-        mt19937 gen(rd());
-        uniform_int_distribution<> dis(1, numNodes);
-
-        startnode = dis(gen);
-        do
-        {
-            destination = dis(gen);
-        } while (destination == startnode);
-
-        auto start = chrono::high_resolution_clock::now();
-        dijkstra(startnode);
-        auto stop = chrono::high_resolution_clock::now();
-        once_time = chrono::duration<double>(stop - start).count();
-
-        duration += once_time;
-
-        printf("the length of shortest path from %d to %d is %d\n", startnode, destination, distances[destination]);
     }
 
-    double average_time = duration / 100;
+    double average_time = duration / times;
 
-    if (average_time >= 1.0) {
+    if (average_time >= 1.0)
+    {
         printf("this function costs average %.6lf s\n", average_time);
-    } else {
+    }
+    else
+    {
         printf("this function costs average %.6lf ms\n", average_time * 1000);
     }
 
