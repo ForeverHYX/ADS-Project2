@@ -35,10 +35,21 @@ inline void relax(int x, int y, int d) {
     if (distances[y] > distances[x] + d) {
         distances[y] = distances[x] + d;
         if (!visited[y]) {
-            minHeap.insert({distances[y], y});
+            bool found = false;
+            for (size_t i = 0; i < minHeap.heap.size(); ++i) {
+                if (minHeap.heap[i].second == y) {
+                    minHeap.decreaseKey(i, {distances[y], y});
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                minHeap.insert({distances[y], y});
+            }
         }
     }
 }
+
 
 inline void dijkstra(int startNode) {
     distances[startNode] = 0;
@@ -68,8 +79,7 @@ int main()
     int startnode, destination;
     double once_time;
     duration = 0;
-
-    for (int k = 1; k <= 100; k++)
+    for (int k = 1; k <= 1000; k++)
     {
 
         FILE *file = fopen("SAMPLE.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
@@ -110,7 +120,7 @@ int main()
         printf("the length of shortest path from %d to %d is %d\n", startnode, destination, distances[destination]);
     }
 
-    double average_time = duration / 100;
+    double average_time = duration / 1000;
 
     if (average_time >= 1.0) {
         printf("this function costs average %.6lf s\n", average_time);

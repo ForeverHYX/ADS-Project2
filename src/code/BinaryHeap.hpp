@@ -2,7 +2,6 @@
 #define BINARYHEAP_HPP
 
 #include <vector>
-#include <stdexcept>
 
 template <class T>
 struct BinaryHeap {
@@ -19,20 +18,28 @@ struct BinaryHeap {
 
     T find_min() {
         if (heap.empty()) {
-            throw std::underflow_error("Heap is empty");
+            return T(); // 返回默认值
         }
         return heap[0];
     }
 
     void delete_min() {
         if (heap.empty()) {
-            throw std::underflow_error("Heap is empty");
+            return; // 堆为空直接返回
         }
         heap[0] = heap.back();
         heap.pop_back();
         if (!heap.empty()) {
             _down_shift();
         }
+    }
+
+    void decreaseKey(size_t index, T new_val) {
+        if (index >= heap.size() || new_val > heap[index]) {
+            return;
+        }
+        heap[index] = new_val;
+        _up_shift_from_index(index);
     }
 
 private:
@@ -77,6 +84,24 @@ private:
         }
 
         heap[parent] = tmp;
+    }
+
+    void _up_shift_from_index(size_t index) {
+        size_t child = index;
+        size_t parent = (child - 1) / 2;
+
+        T tmp = heap[child];
+
+        while (child > 0) {
+            if (heap[parent] <= tmp) {
+                break;
+            }
+            heap[child] = heap[parent];
+            child = parent;
+            parent = (child - 1) / 2;
+        }
+
+        heap[child] = tmp;
     }
 };
 

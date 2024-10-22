@@ -71,8 +71,6 @@ clock_t start, stop;
 double duration;
 int main()
 {
-    std::random_device rd;  
-    std::mt19937 gen(rd());
     int startnode, destination;
     double once_time;
     duration = 0;
@@ -80,7 +78,7 @@ int main()
     for (int k = 1; k <= 1000; k++)
     {
 
-        FILE *file = fopen("SAMPLE.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+        FILE *file = fopen("linear_graph.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
         fscanf(file, "%d %d\n", &numNodes, &numEdges);
         for (int i = 1; i <= numNodes; ++i)
         {
@@ -98,7 +96,9 @@ int main()
             addEdge(u, v, d);
         }
 
-        std::uniform_int_distribution<> dis(1, numNodes);
+        random_device rd;  
+        mt19937 gen(rd());
+        uniform_int_distribution<> dis(1, numNodes);
 
         int startnode = dis(gen);
         int destination;
@@ -118,6 +118,11 @@ int main()
     }
 
     printf("this function costs average %lf sec", duration / 100);
+
+    dijkstra(1);
+    for(int i=0;i<numNodes;i++){
+        printf("%d\n",distances[i]);
+    }
 
     return 0;
 }
