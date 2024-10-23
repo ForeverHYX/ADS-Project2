@@ -1,3 +1,6 @@
+/*
+Using priority queue to create a new heap, other details are the same as DjiWithBH.cpp, see the comments there
+*/
 #include <iostream>
 #include <vector>
 #include <cstdio>
