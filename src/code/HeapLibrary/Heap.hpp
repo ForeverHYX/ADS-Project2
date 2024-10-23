@@ -1,3 +1,5 @@
+// Just a wrapper for the priority queue in STL
+
 #include <queue>
 #include <vector>
 
@@ -35,8 +37,8 @@ struct Heap {
 
     bool is_exist(T key) {
         std::vector<T> t = heap.__get_container();
-        for (typename std::vector<T>::iterator i = t.begin(); i != t.end(); ++i) {
-            if (*i == key) {
+        for (auto i:t) {
+            if (i == key) {
                 return true;
             }
         }
