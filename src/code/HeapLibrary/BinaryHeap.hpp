@@ -1,10 +1,10 @@
-#ifndef BINARYHEAP_HPP
-#define BINARYHEAP_HPP
+// This library implements binary heap and some basic operations based on vector in STL.
 
 #include <vector>
 
 template <class T>
 struct BinaryHeap {
+    // Heap represents the internal data structure of a binary heap. The reason for using vector is to support random access.
     std::vector<T> heap;
 
     BinaryHeap() {
@@ -18,14 +18,14 @@ struct BinaryHeap {
 
     T find_min() {
         if (heap.empty()) {
-            return T(); // 返回默认值
+            return T();
         }
         return heap[0];
     }
 
     void delete_min() {
         if (heap.empty()) {
-            return; // 堆为空直接返回
+            return;
         }
         heap[0] = heap.back();
         heap.pop_back();
@@ -34,7 +34,7 @@ struct BinaryHeap {
         }
     }
 
-    void decreaseKey(size_t index, T new_val) {
+    void decrease_key(size_t index, T new_val) {
         if (index >= heap.size() || new_val > heap[index]) {
             return;
         }
@@ -69,9 +69,8 @@ private:
         T tmp = heap[parent];
 
         while (left <= end) {
-            size_t right = left + 1;
             if (right <= end && heap[left] > heap[right]) {
-                left = right;
+                left = left + 1;
             }
 
             if (tmp <= heap[left]) {
@@ -104,5 +103,3 @@ private:
         heap[child] = tmp;
     }
 };
-
-#endif
