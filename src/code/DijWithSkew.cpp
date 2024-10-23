@@ -5,6 +5,9 @@
 #include <time.h>
 #include <random>
 #include <chrono>
+#include <string>
+#include <fstream>
+#include <algorithm>
 #include "HeapLibrary/SkewHeap.hpp"
 
 using namespace std;
@@ -21,7 +24,6 @@ int head[MAX_NODES], distances[MAX_NODES], edgeCount;
 bool visited[MAX_NODES];
 int numNodes, numEdges, startNode;
 
-// 用于记录insert和delete_min的累计时间
 double totalInsertTime = 0;
 double totalDeleteMinTime = 0;
 int insertCount = 0;
@@ -41,7 +43,6 @@ inline void relax(int x, int y, int d) {
     if (distances[y] > distances[x] + d) {
         distances[y] = distances[x] + d;
         if (!visited[y]) {
-            // 记录insert操作的时间
             auto startInsert = chrono::high_resolution_clock::now();
             minHeap.insert({distances[y], y});
             auto stopInsert = chrono::high_resolution_clock::now();
@@ -81,16 +82,22 @@ inline void dijkstra(int startNode) {
     }
 }
 
-double duration;
-int main() {
+int main()
+{
     srand((unsigned int)time(0));
-    int startnode, destination;
-    double once_time;
-    duration = 0;
+    vector<pair<int, double>> results;
+    ofstream outputFile("resultsSkew.txt");
 
-    for (int k = 1; k <= 10; k++) {
-        FILE *file = fopen("FLA.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
-        fscanf(file, "%d %d\n", &numNodes, &numEdges);
+    for (int k = 1; k <= 4; k++)
+    {
+        string filename = "graphwithdiffnode/quadratic_graph" + to_string(k) + ".txt";
+        ifstream file(filename);
+        if (!file.is_open()) {
+            cerr << "Failed to open " << filename << endl;
+            continue;
+        }
+
+        file >> numNodes >> numEdges;
         for (int i = 1; i <= numNodes; ++i) {
             distances[i] = numeric_limits<int>::max();
             head[i] = 0;
@@ -100,16 +107,15 @@ int main() {
         for (int i = 0; i < numEdges; ++i) {
             char a;
             int u, v, d;
-            fscanf(file, "%c %d %d %d\n", &a, &u, &v, &d);
-
+            file >> a >> u >> v >> d;
             addEdge(u, v, d);
         }
 
-        random_device rd;
+        random_device rd;  
         mt19937 gen(rd());
         uniform_int_distribution<> dis(1, numNodes);
-
-        startnode = dis(gen);
+        int startnode = dis(gen);
+        int destination;
         do {
             destination = dis(gen);
         } while (destination == startnode);
@@ -117,27 +123,17 @@ int main() {
         auto start = chrono::high_resolution_clock::now();
         dijkstra(startnode);
         auto stop = chrono::high_resolution_clock::now();
-        once_time = chrono::duration<double>(stop - start).count();
+        double once_time = chrono::duration<double>(stop - start).count() * 1000;
 
-        duration += once_time;
-
-        printf("the length of shortest path from %d to %d is %d\n", startnode, destination, distances[destination]);
+        results.push_back({numNodes, once_time});
     }
 
-    double average_time = duration / 10;
+    sort(results.begin(), results.end());
 
-    if (average_time >= 1.0) {
-        printf("this function costs average %.6lf s\n", average_time);
-    } else {
-        printf("this function costs average %.6lf ms\n", average_time * 1000);
+    for (const auto& result : results) {
+        outputFile << result.first << " " << result.second << endl;
     }
 
-    if (insertCount > 0) {
-        printf("Average insert time: %.6lf ms\n", (totalInsertTime / insertCount) * 1000);
-    }
-    if (deleteMinCount > 0) {
-        printf("Average delete_min time: %.6lf ms\n", (totalDeleteMinTime / deleteMinCount) * 1000);
-    }
-
+    outputFile.close();
     return 0;
 }
