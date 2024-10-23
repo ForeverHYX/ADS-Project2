@@ -4,7 +4,7 @@
 #include <limits>
 #include <random>
 #include <chrono>
-#include "BinomialHeap.hpp"
+#include "HeapLibrary/BinomialHeap.hpp"
 
 using namespace std;
 

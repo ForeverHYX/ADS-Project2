@@ -5,7 +5,7 @@
 #include <cstring>
 #include <random>
 #include <chrono>
-#include "BinaryHeap.hpp"
+#include "HeapLibrary/BinaryHeap.hpp"
 
 using namespace std;
 
