@@ -97,7 +97,7 @@ int main()
     int times = 0;
     for (int cnt = 1; cnt <= 1; cnt++)
     {
-        string filename = "FLA.txt"; // 文件名
+        string filename = "FLA.txt"; 
         for (int k = 1; k <= 10; k++)
         {
 
@@ -151,7 +151,6 @@ int main()
         printf("this function costs average %.6lf ms\n", average_time * 1000);
     }
 
-    // 输出 insertion 和 deletemin 的统计信息
     printf("Total insertion time: %.6lf s, average insertion time: %.6lf ms\n", total_insert_time, (total_insert_time / insert_count) * 1000);
     printf("Total delete_min time: %.6lf s, average delete_min time: %.6lf ms\n", total_deletemin_time, (total_deletemin_time / deletemin_count) * 1000);
 

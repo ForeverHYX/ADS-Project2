@@ -59,7 +59,6 @@ inline void dijkstra(int startNode)
 {
     distances[startNode] = 0;
 
-    // 记录首次insert操作的时间
     auto startInsert = chrono::high_resolution_clock::now();
     minHeap.insert({0, startNode});
     auto stopInsert = chrono::high_resolution_clock::now();
@@ -68,7 +67,7 @@ inline void dijkstra(int startNode)
 
     while (minHeap.root_node != nullptr)
     {
-        // 记录delete_min操作的时间
+        
         auto startDelete = chrono::high_resolution_clock::now();
         auto current = minHeap.find_min(); // Find minimum distance node
         minHeap.delete_min();
@@ -154,7 +153,6 @@ int main()
         printf("this function costs average %.6lf ms\n", average_time * 1000);
     }
 
-    // 输出 insert 和 delete_min 的统计信息
     printf("Total insertion time: %.6lf s, average insertion time: %.6lf ms\n", totalInsertTime, (totalInsertTime / insertCount) * 1000);
     printf("Total delete_min time: %.6lf s, average delete_min time: %.6lf ms\n", totalDeleteMinTime, (totalDeleteMinTime / deleteMinCount) * 1000);
 
