@@ -90,21 +90,21 @@ inline void dijkstra(int startNode)
     }
 }
 
-double duration;
+double total_duration;
 int main()
 {
     srand((unsigned int)time(0));
     int startnode, destination;
     double once_time;
-    duration = 0;
+    total_duration = 0;
     int times = 0;
     for (int cnt = 1; cnt <= 1; cnt++)
     {
-        string filename = "quadratic_root_graph" + to_string(cnt) + ".txt";
-        for (int k = 1; k <= 1000; k++)
+        string filename = "FLA.txt";
+        for (int k = 1; k <= 10; k++)
         {
 
-            FILE *file = fopen(filename.c_str(), "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+            FILE *file = fopen(filename.c_str(), "r");
             fscanf(file, "%d %d\n", &numNodes, &numEdges);
             for (int i = 1; i <= numNodes; ++i)
             {
@@ -136,14 +136,14 @@ int main()
             auto stop = chrono::high_resolution_clock::now();
             once_time = chrono::duration<double>(stop - start).count();
 
-            duration += once_time;
+            total_duration += once_time;
             times++;
 
             printf("the length of shortest path from %d to %d is %d, cost %.6lf ms\n", startnode, destination, distances[destination], once_time * 1000);
         }
     }
 
-    double average_time = duration / times;
+    double average_time = total_duration / times;
 
     if (average_time >= 1.0)
     {
@@ -153,6 +153,10 @@ int main()
     {
         printf("this function costs average %.6lf ms\n", average_time * 1000);
     }
+
+    // 输出 insert 和 delete_min 的统计信息
+    printf("Total insertion time: %.6lf s, average insertion time: %.6lf ms\n", totalInsertTime, (totalInsertTime / insertCount) * 1000);
+    printf("Total delete_min time: %.6lf s, average delete_min time: %.6lf ms\n", totalDeleteMinTime, (totalDeleteMinTime / deleteMinCount) * 1000);
 
     return 0;
 }

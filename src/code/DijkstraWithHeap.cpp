@@ -68,10 +68,10 @@ int main()
     double once_time;
     duration = 0;
 
-    for (int k = 1; k <= 100; k++)
+    for (int k = 1; k <= 10; k++)
     {
 
-        FILE *file = fopen("quadratic_graph1.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+        FILE *file = fopen("NY.txt", "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
         fscanf(file, "%d %d\n", &numNodes, &numEdges);
         for (int i = 1; i <= numNodes; ++i)
         {
@@ -109,7 +109,7 @@ int main()
         printf("the length of shortest path from %d to %d is %d\n", startnode, destination, distances[destination]);
     }
 
-    double average_time = duration / 100;
+    double average_time = duration / 10;
 
     if (average_time >= 1.0) {
         printf("this function costs average %.6lf s\n", average_time);

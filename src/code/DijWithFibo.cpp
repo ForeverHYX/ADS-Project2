@@ -8,6 +8,7 @@
 #include "FibonacciHeap.hpp"
 
 using namespace std;
+using namespace chrono;
 
 const int MAX_NODES = 25000000;
 const int MAX_EDGES = 60000000;
@@ -21,6 +22,11 @@ Edge edges[MAX_EDGES];
 int head[MAX_NODES], distances[MAX_NODES], edgeCount;
 bool visited[MAX_NODES];
 int numNodes, numEdges;
+
+double total_insert_time = 0.0;
+double total_deletemin_time = 0.0;
+int insert_count = 0;
+int deletemin_count = 0;
 
 inline void addEdge(int u, int v, int d)
 {
@@ -40,7 +46,11 @@ inline void relax(int x, int y, int d)
         distances[y] = distances[x] + d;
         if (!visited[y])
         {
+            auto start = high_resolution_clock::now();
             minHeap.insert({distances[y], y});
+            auto stop = high_resolution_clock::now();
+            total_insert_time += duration<double>(stop - start).count();
+            insert_count++;
         }
     }
 }
@@ -48,12 +58,20 @@ inline void relax(int x, int y, int d)
 inline void dijkstra(int startNode)
 {
     distances[startNode] = 0;
+    auto start = high_resolution_clock::now();
     minHeap.insert({0, startNode});
+    auto stop = high_resolution_clock::now();
+    total_insert_time += duration<double>(stop - start).count();
+    insert_count++;
 
     while (minHeap.heap != nullptr)
     {
+        start = high_resolution_clock::now();
         auto current = minHeap.find_min();
         minHeap.delete_min();
+        stop = high_resolution_clock::now();
+        total_deletemin_time += duration<double>(stop - start).count();
+        deletemin_count++;
 
         int x = current.second;
         if (visited[x])
@@ -69,21 +87,21 @@ inline void dijkstra(int startNode)
     }
 }
 
-double duration;
+double total_duration;
 int main()
 {
     srand((unsigned int)time(0));
     int startnode, destination;
     double once_time;
-    duration = 0;
+    total_duration = 0;
     int times = 0;
     for (int cnt = 1; cnt <= 1; cnt++)
     {
-        string filename = "SAMPLE.txt";//"quadratic_root_graph" + to_string(cnt) + ".txt";
-        for (int k = 1; k <= 100; k++)
+        string filename = "FLA.txt"; // 文件名
+        for (int k = 1; k <= 10; k++)
         {
 
-            FILE *file = fopen(filename.c_str(), "r"); // biggest.txt   SAMPLE.txt   linear_graph.txt   quadratic_root_graph.txt    quadratic_graph.txt
+            FILE *file = fopen(filename.c_str(), "r");
             fscanf(file, "%d %d\n", &numNodes, &numEdges);
             for (int i = 1; i <= numNodes; ++i)
             {
@@ -110,19 +128,19 @@ int main()
                 destination = dis(gen);
             } while (destination == startnode);
 
-            auto start = chrono::high_resolution_clock::now();
+            auto start = high_resolution_clock::now();
             dijkstra(startnode);
-            auto stop = chrono::high_resolution_clock::now();
+            auto stop = high_resolution_clock::now();
             once_time = chrono::duration<double>(stop - start).count();
 
-            duration += once_time;
+            total_duration += once_time;
             times++;
 
             printf("the length of shortest path from %d to %d is %d, cost %.6lf ms\n", startnode, destination, distances[destination], once_time * 1000);
         }
     }
 
-    double average_time = duration / times;
+    double average_time = total_duration / times;
 
     if (average_time >= 1.0)
     {
@@ -132,6 +150,10 @@ int main()
     {
         printf("this function costs average %.6lf ms\n", average_time * 1000);
     }
+
+    // 输出 insertion 和 deletemin 的统计信息
+    printf("Total insertion time: %.6lf s, average insertion time: %.6lf ms\n", total_insert_time, (total_insert_time / insert_count) * 1000);
+    printf("Total delete_min time: %.6lf s, average delete_min time: %.6lf ms\n", total_deletemin_time, (total_deletemin_time / deletemin_count) * 1000);
 
     return 0;
 }
