@@ -1,16 +1,17 @@
+
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd  # 新增部分
 
 # 数据规模 - O(N), O(N^1.5), O(N^2)
 edges = np.array([10, 100, 1000])  # 你可以根据实际情况更改
 
 # 不同堆在不同数据规模下的时间 (单位: 毫秒)
-# 请用你自己的数据替换这里的时间值
-stl_times = [1, 10, 100]           # 这是你需要填入的时间数据
-binary_heap_times = [2, 12, 110]    # 你自己的数据
-binomial_heap_times = [1.5, 11, 105]# 你自己的数据
-skew_heap_times = [1.8, 13, 120]    # 你自己的数据
-fibonacci_heap_times = [1.2, 9, 95] # 你自己的数据
+stl_times = [0.085, 1.388, 12.93]           
+binary_heap_times = [0.2162, 2.183, 28.31]   
+binomial_heap_times = [0.202, 1.655, 21.83] 
+skew_heap_times = [0.1145, 1.802, 20.34]    
+fibonacci_heap_times = [0.1452, 1.646, 21.86]
 
 # 绘制折线图
 plt.figure(figsize=(10, 6))
@@ -34,3 +35,20 @@ plt.legend()
 # 展示图表
 plt.grid(True)
 plt.show()
+
+# 创建 pandas DataFrame 并展示表格
+data = {
+    'Edge Growth': ['O(N)', 'O(N^1.5)', 'O(N^2)'],
+    'STL Heap (ms)': stl_times,
+    'Binary Heap (ms)': binary_heap_times,
+    'Binomial Heap (ms)': binomial_heap_times,
+    'Skew Heap (ms)': skew_heap_times,
+    'Fibonacci Heap (ms)': fibonacci_heap_times
+}
+
+# 创建 DataFrame
+df = pd.DataFrame(data)
+
+# 打印表格
+print("Performance Table:")
+print(df)
