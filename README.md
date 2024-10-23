@@ -6,7 +6,6 @@ The structure of the repository woule be like the following:
 ADS-Project2
 ├── docs 
 │   ├── report.pdf
-│   ├── report.pptx
 │   ├── interface.md
 │   └── ...
 ├── src  
