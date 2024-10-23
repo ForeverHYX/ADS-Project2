@@ -4,18 +4,34 @@ The structure of the repository woule be like the following:
 
 ```
 ADS-Project2
-├── docs Slides and reports
+├── docs 
 │   ├── report.pdf
 │   ├── report.pptx
+│   ├── interface.md
 │   └── ...
 ├── src  
 │   ├── code
+│   │   ├── HeapLibrary
+│   │   └── other code
 │   ├── testcase
 │   └── ...
 └── README.md
 ```
+### How to run?
+
+If you wanna run the code:
+- For any ```.py``` file, click right button of your mouse to run in terminal.
+- For ```.c``` file, change input file in ```fscanf```, an then run in terminal with
+```bash
+g++ xxx.c -o -std=c++11 xxx
+./xxx
+```
+
+### Attention
 
 For anyone wanna purchase a commit, follow the rules:
 
 - Make your commit comments clear.
 - Do not any purchase meaningless commit.
+
+All testcases are attached, for American traffic network data, visit ![DIMACS](http://www.dis.uniroma1.it/challenge9/download.shtml), our group used BAY, FLA, NY for testing.
