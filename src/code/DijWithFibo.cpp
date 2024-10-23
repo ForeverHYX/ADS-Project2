@@ -5,7 +5,7 @@
 #include <time.h>
 #include <random>
 #include <chrono>
-#include "FibonacciHeap.hpp"
+#include "HeapLibrary/FibonacciHeap.hpp"
 
 using namespace std;
 using namespace chrono;

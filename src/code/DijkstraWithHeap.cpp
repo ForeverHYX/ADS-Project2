@@ -5,7 +5,7 @@
 #include <time.h>
 #include<random>
 #include<chrono>
-#include "Heap.hpp"
+#include "HeapLibrary/Heap.hpp"
 
 using namespace std;
 
