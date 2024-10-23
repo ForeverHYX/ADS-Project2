@@ -11,11 +11,12 @@ ADS-Project2
 │   └── ...
 ├── src  
 │   ├── code
-│   │   ├── graphwithdiffnode //All testcases
 │   │   ├── outputs  // All outputs of different data from graphwithdiffnode folder
 │   │   ├── HeapLibrary // Different heap implementations
 │   │   └── other code
 │   ├── testcase
+│   │   ├── graphwithdiffnode //All testcases
+│   │   └── other testcases
 │   └── ...
 └── README.md
 ```
@@ -28,6 +29,11 @@ If you wanna run the code:
 g++ xxx.c -o -std=c++11 xxx
 ./xxx
 ```
+### Testcases
+
+All testcases are attached, for American traffic network data, visit [DIMACS](http://www.dis.uniroma1.it/challenge9/download.shtml), our group used BAY, FLA, NY for testing.
+
+In the testcase/graphwithdiffnode are graphs where linear stands for $M=O(N)$, quadratic-root stands for $M=O(N^{1.5})$ and quadratic stands for $M=O(N^2)$, outside that folder are other samples we've generated.
 
 ### Attention
 
@@ -35,5 +41,3 @@ For anyone wanna purchase a commit, follow the rules:
 
 - Make your commit comments clear.
 - Do not any purchase meaningless commit.
-
-All testcases are attached, for American traffic network data, visit [DIMACS](http://www.dis.uniroma1.it/challenge9/download.shtml), our group used BAY, FLA, NY for testing.

@@ -3,10 +3,10 @@ import numpy as np
 
 heap_types = ['Fibonacci Heap', 'Binary Heap', 'Binomial Heap']
 insert_times = [0.000064, 0.000102, 0.000130]
-delete_min_times = [0.000615, 0.000294, 0.000493]
+delete_min_times = [0.000615, 0.000294, 0.000493] # Time consuming
 
 bar_width = 0.35
-index = np.arange(len(heap_types))
+index = np.arange(len(heap_types)) # x-axis
 
 fig, ax = plt.subplots()
 
@@ -24,7 +24,7 @@ ax.legend()
 def add_labels(bars):
     for bar in bars:
         yval = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2, yval, f'{yval:.6f}', va='bottom', ha='center')
+        ax.text(bar.get_x() + bar.get_width()/2, yval, f'{yval:.6f}', va='bottom', ha='center')# generate bar graph
 
 add_labels(bars1)
 add_labels(bars2)
